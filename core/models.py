@@ -4,7 +4,6 @@ This file primarily defines user and group profile objects, which will
 vary, via the polymorphism library, to serve different purposes.
 """
 
-
 from django.db import models
 from django.contrib.auth.models import User, Group
 from polymorphic.models import PolymorphicModel
@@ -50,7 +49,7 @@ class UserProfile(PolymorphicModel):
         return self.display_last_name or self.user.last_name
 
 
-class StudentProfile(UserProfile):
+class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
 
     student_id = models.CharField(max_length=8, unique=True)
@@ -58,19 +57,38 @@ class StudentProfile(UserProfile):
     counselor = models.ForeignKey(User)
 
 
-class TeacherProfile(UserProfile):
+class TeacherUserProfile(UserProfile):
     """Teacher subclass of the user profile."""
 
     pass
 
 
-class CounselorProfile(UserProfile):
+class CounselorUserProfile(UserProfile):
     """Counselor subclass of the user profile."""
 
     pass
 
 
-class StaffProfile(UserProfile):
+class StaffUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
     title = models.CharField(max_length=30)
+
+
+class GroupProfile(PolymorphicModel):
+    """Superclass group profile model."""
+
+    group = models.OneToOneField(Group, related_name="profile")
+    title = models.CharField(max_length=80)
+    description = models.CharField(max_length=160)
+
+
+class ClubGroupProfile(GroupProfile):
+    """Type of group used for extracurricular clubs."""
+
+    sponsor = models.ManyToManyField(User)
+
+
+class AcademicGroupProfile(GroupProfile):
+    """Academic organization profile."""
+
