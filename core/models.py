@@ -5,11 +5,13 @@ vary, via the polymorphism library, to serve different purposes.
 """
 
 from django.db import models
-from django.contrib.auth import models as auth
 from polymorphic.models import PolymorphicModel
+from django.contrib.auth import models as auth
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 
 
-class PROFILE:
+class USER:
     """User profile enumeration."""
 
     DEFAULT = None
@@ -19,30 +21,35 @@ class PROFILE:
     STAFF = "staff"
     ALUMNUS = "alumnus"
 
+    models = {}
 
-class GROUP:
-    """Group profile enumeration."""
+    @staticmethod
+    def register(type):
+        """Register a profile."""
 
-    DEFAULT = None
-    CLUB = "club"
-    ACADEMIC = "academic"
+        def _register(cls):
+            USER.models[type] = cls
+            return cls
+        return _register
 
 
 class UserManager(auth.UserManager):
     """User manager that overrides user creation for polymorphic."""
 
-    def create(self, type, username, email=None, password=None, **extra_fields):
+    def create(self, type: USER, **options):
         """Create a user with an enumerated type."""
 
-        user = super().create(username, email, password, **extra_fields)
-        user.profile = {
-            PROFILE.DEFAULT: UserProfile,
-            PROFILE.STUDENT: StudentUserProfile,
-            PROFILE.TEACHER: TeacherUserProfile,
-            PROFILE.COUNSELOR: CounselorUserProfile,
-            PROFILE.STAFF: StaffUserProfile,
-            PROFILE.ALUMNUS: AlumnusUserProfile
-        }[type].objects.create(user=user, **extra_fields.get("profile", {}))
+        profile_options = {}
+        for option in tuple(options):
+            if option.startswith("profile__"):
+                profile_option = option[len("profile__"):]
+                profile_options[profile_option] = options.pop(option)
+
+        user = User(**options)
+        profile = USER.models[type](user=user, **profile_options)
+        profile.user_id = user.id
+        user.save()
+        return user
 
 
 class User(auth.User):
@@ -54,11 +61,28 @@ class User(auth.User):
         proxy = True
 
 
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """Save the corresponding profile when the user is saved."""
+
+    instance.profile.save()
+
+
+@receiver(pre_delete, sender=User)
+def delete_user_profile(sender, instance, **kwargs):
+    """Delete the user profile prior to user deletion."""
+
+    try:
+        instance.profile.delete()
+    except Exception as e:
+        print("Failed to delete user profile:", e)
+
+
 class UserProfile(PolymorphicModel):
     """Superclass user profile model."""
 
-    user = models.OneToOneField(User)
-    type = PROFILE.DEFAULT
+    user = models.OneToOneField(User, related_name="profile")
+    type = USER.DEFAULT
 
     middle_name = models.CharField(blank=True, null=True, max_length=60)
     display_first_name = models.CharField(blank=True, null=True, max_length=60)
@@ -77,40 +101,105 @@ class UserProfile(PolymorphicModel):
         return self.display_last_name or self.user.last_name
 
 
+@USER.register(USER.STUDENT)
 class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
 
-    type = PROFILE.STUDENT
+    type = USER.STUDENT
 
     student_id = models.CharField(max_length=8, unique=True)
     graduation_year = models.IntegerField(blank=True, null=True)
-    counselor = models.ForeignKey(User)
+    counselor = models.ForeignKey(User, blank=True, null=True)
 
 
+@USER.register(USER.TEACHER)
 class TeacherUserProfile(UserProfile):
     """Teacher subclass of the user profile."""
 
-    type = PROFILE.TEACHER
+    type = USER.TEACHER
 
 
+@USER.register(USER.COUNSELOR)
 class CounselorUserProfile(UserProfile):
     """Counselor subclass of the user profile."""
 
-    type = PROFILE.COUNSELOR
+    type = USER.COUNSELOR
 
 
+@USER.register(USER.STAFF)
 class StaffUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    type = PROFILE.STAFF
+    type = USER.STAFF
     title = models.CharField(max_length=30)
 
 
+@USER.register(USER.ALUMNUS)
 class AlumnusUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    type = PROFILE.ALUMNUS
+    type = USER.ALUMNUS
     graduation_year = models.IntegerField(blank=True, null=True)
+
+
+class GROUP:
+    """Group profile enumeration."""
+
+    DEFAULT = None
+    CLUB = "club"
+    ACADEMIC = "academic"
+
+    models = {}
+
+    @staticmethod
+    def register(type):
+        """Register a profile."""
+
+        def _register(cls):
+            GROUP.models[type] = cls
+            return cls
+        return _register
+
+
+class GroupManager(auth.GroupManager):
+    """User manager that overrides user creation for polymorphic."""
+
+    def create(self, type: GROUP, **options):
+        """Create a user with an enumerated type."""
+
+        profile_options = {}
+        for option in tuple(options):
+            if option.startswith("profile__"):
+                profile_options[option] = options.pop(option)
+
+        group = super().create(**options)
+        profile = GROUP.models[type].objects.create(group=group, **profile_options)
+        profile.save()
+        return group
+
+
+class Group(auth.Group):
+    """User proxy to allow polymorphic profiles."""
+
+    objects = GroupManager()
+
+    class Meta:
+        proxy = True
+
+
+@receiver(post_save, sender=Group)
+def save_group_profile(sender, instance, **kwargs):
+    """Save the corresponding profile when the group is saved."""
+
+    instance.profile.save()
+
+
+@receiver(pre_delete, sender=Group)
+def delete_group_profile(sender, instance, **kwargs):
+    """Delete the group profile prior to group deletion."""
+
+    if instance.profile:
+        instance.profile.delete()
 
 
 class GroupProfile(PolymorphicModel):
@@ -123,6 +212,7 @@ class GroupProfile(PolymorphicModel):
     description = models.CharField(max_length=160)
 
 
+@USER.register(GROUP.CLUB)
 class ClubGroupProfile(GroupProfile):
     """Type of group used for extracurricular clubs."""
 
@@ -130,6 +220,7 @@ class ClubGroupProfile(GroupProfile):
     sponsor = models.ManyToManyField(User)
 
 
+@USER.register(GROUP.ACADEMIC)
 class AcademicGroupProfile(GroupProfile):
     """Academic organization profile."""
 
