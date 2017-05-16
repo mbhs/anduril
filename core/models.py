@@ -65,6 +65,8 @@ class User(auth.User):
 def save_user_profile(sender, instance, **kwargs):
     """Save the corresponding profile when the user is saved."""
 
+    # TODO: figure out why this isn't working
+    instance.profile.user_id = instance.id
     instance.profile.save()
 
 
@@ -191,6 +193,8 @@ class Group(auth.Group):
 def save_group_profile(sender, instance, **kwargs):
     """Save the corresponding profile when the group is saved."""
 
+    # TODO: test groups, this line might not be necessary
+    instance.profile.group_id = instance.id
     instance.profile.save()
 
 
@@ -198,9 +202,11 @@ def save_group_profile(sender, instance, **kwargs):
 def delete_group_profile(sender, instance, **kwargs):
     """Delete the group profile prior to group deletion."""
 
-    if instance.profile:
+    try:
         instance.profile.delete()
-
+    except Exception as e:
+        print("Failed to delete user profile:", e)
+        
 
 class GroupProfile(PolymorphicModel):
     """Superclass group profile model."""
