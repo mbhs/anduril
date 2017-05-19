@@ -60,6 +60,16 @@ class User(auth.User):
     class Meta:
         proxy = True
 
+    def __repr__(self):
+        """Represent the user as a string."""
+
+        try:
+            return f"<{self.profile.type.capitalize()} {self.username}>"
+        except AttributeError:
+            return f"<User {self.username}>"
+
+    __str__ = __repr__
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -188,6 +198,16 @@ class Group(auth.Group):
     class Meta:
         proxy = True
 
+    def __repr__(self):
+        """Represent the user as a string."""
+
+        try:
+            return f"<{self.profile.type.capitalize()} {self.name}>"
+        except AttributeError:
+            return f"<Group {self.name}>"
+
+    __str__ = __repr__
+
 
 @receiver(post_save, sender=Group)
 def save_group_profile(sender, instance, **kwargs):
@@ -206,7 +226,7 @@ def delete_group_profile(sender, instance, **kwargs):
         instance.profile.delete()
     except Exception as e:
         print("Failed to delete user profile:", e)
-        
+
 
 class GroupProfile(PolymorphicModel):
     """Superclass group profile model."""
