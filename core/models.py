@@ -1,7 +1,7 @@
 """Models shared by other Anduril applications.
 
-This file primarily defines user and group profile objects, which will
-vary, via the polymorphism library, to serve different purposes.
+This file primarily defines user and group profile objects, which vary,
+via the polymorphic library, to serve as different types of each.
 """
 
 from django.db import models
@@ -12,7 +12,7 @@ from django.dispatch import receiver
 
 
 class USER:
-    """User profile enumeration."""
+    """User profile enumeration and registration."""
 
     DEFAULT = None
     STUDENT = "student"
@@ -35,10 +35,15 @@ class USER:
 
 
 class UserManager(auth.UserManager):
-    """User manager that overrides user creation for polymorphic."""
+    """User manager that modifies creation for polymorphic profiles.
+    
+    A separate user manager is necessary to override User object
+    creation. Since we want to avoid any situations where a user 
+    object doesn't have a profile, we require it as a parameter.
+    """
 
     def create(self, type: USER, **options):
-        """Create a user with an enumerated type."""
+        """Create a user with an enumerated user profile type."""
 
         profile_options = {}
         for option in tuple(options):
@@ -54,7 +59,7 @@ class UserManager(auth.UserManager):
 
 
 class User(auth.User):
-    """User proxy to allow polymorphic profiles."""
+    """User proxy that overrides user creation."""
 
     objects = UserManager()
 
@@ -91,7 +96,7 @@ def delete_user_profile(sender, instance, **kwargs):
 
 
 class UserProfile(PolymorphicModel):
-    """Superclass user profile model."""
+    """Base user profile model."""
 
     user = models.OneToOneField(User, related_name="profile")
     type = USER.DEFAULT
@@ -147,7 +152,7 @@ class AlumnusUserProfile(UserProfile):
 
 
 class GROUP:
-    """Group profile enumeration."""
+    """Group profile enumeration and registration."""
 
     DEFAULT = None
     CLUB = "club"
@@ -167,10 +172,10 @@ class GROUP:
 
 
 class GroupManager(auth.GroupManager):
-    """User manager that overrides user creation for polymorphic."""
+    """User manager that modifies creation for polymorphic profiles."""
 
     def create(self, type: GROUP, **options):
-        """Create a user with an enumerated type."""
+        """Create a group with an enumerated group profile type."""
 
         profile_options = {}
         for option in tuple(options):
@@ -184,7 +189,7 @@ class GroupManager(auth.GroupManager):
 
 
 class Group(auth.Group):
-    """User proxy to allow polymorphic profiles."""
+    """Group proxy that overrides user creation"""
 
     objects = GroupManager()
 
@@ -192,7 +197,7 @@ class Group(auth.Group):
         proxy = True
 
     def __repr__(self):
-        """Represent the user as a string."""
+        """Represent the group as a string."""
 
         try:
             return f"<{self.profile.type.capitalize()} {self.name}>"
