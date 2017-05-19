@@ -29,6 +29,7 @@ class USER:
 
         def _register(cls):
             USER.models[type] = cls
+            cls.type = type
             return cls
         return _register
 
@@ -75,8 +76,7 @@ class User(auth.User):
 def save_user_profile(sender, instance, **kwargs):
     """Save the corresponding profile when the user is saved."""
 
-    # TODO: figure out why this isn't working
-    instance.profile.user_id = instance.id
+    instance.profile.user_id = instance.id  # TODO: figure out why this is necessary
     instance.profile.save()
 
 
@@ -117,8 +117,6 @@ class UserProfile(PolymorphicModel):
 class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
 
-    type = USER.STUDENT
-
     student_id = models.CharField(max_length=8, unique=True)
     graduation_year = models.IntegerField(blank=True, null=True)
     counselor = models.ForeignKey(User, blank=True, null=True)
@@ -128,21 +126,16 @@ class StudentUserProfile(UserProfile):
 class TeacherUserProfile(UserProfile):
     """Teacher subclass of the user profile."""
 
-    type = USER.TEACHER
-
 
 @USER.register(USER.COUNSELOR)
 class CounselorUserProfile(UserProfile):
     """Counselor subclass of the user profile."""
-
-    type = USER.COUNSELOR
 
 
 @USER.register(USER.STAFF)
 class StaffUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    type = USER.STAFF
     title = models.CharField(max_length=30)
 
 
@@ -150,7 +143,6 @@ class StaffUserProfile(UserProfile):
 class AlumnusUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    type = USER.ALUMNUS
     graduation_year = models.IntegerField(blank=True, null=True)
 
 
@@ -169,6 +161,7 @@ class GROUP:
 
         def _register(cls):
             GROUP.models[type] = cls
+            cls.type = type
             return cls
         return _register
 
@@ -225,14 +218,13 @@ def delete_group_profile(sender, instance, **kwargs):
     try:
         instance.profile.delete()
     except Exception as e:
-        print("Failed to delete user profile:", e)
+        print(f"Failed to delete user profile: {e}")
 
 
 class GroupProfile(PolymorphicModel):
     """Superclass group profile model."""
 
     group = models.OneToOneField(Group, related_name="profile")
-    type = GROUP.ACADEMIC
 
     title = models.CharField(max_length=80)
     description = models.CharField(max_length=160)
@@ -242,12 +234,9 @@ class GroupProfile(PolymorphicModel):
 class ClubGroupProfile(GroupProfile):
     """Type of group used for extracurricular clubs."""
 
-    type = GROUP.CLUB
     sponsor = models.ManyToManyField(User)
 
 
 @USER.register(GROUP.ACADEMIC)
 class AcademicGroupProfile(GroupProfile):
     """Academic organization profile."""
-
-    type = GROUP.ACADEMIC
