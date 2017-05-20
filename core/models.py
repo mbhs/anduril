@@ -21,6 +21,8 @@ class USER:
     STAFF = "staff"
     ALUMNUS = "alumnus"
 
+    TYPES = (STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS)
+
     models = {}
 
     @staticmethod
@@ -42,6 +44,14 @@ class UserManager(auth.UserManager):
     object doesn't have a profile, we require it as a parameter.
     """
 
+    def create_profile(self, user, type: USER, **options):
+        """Assign a user to their corresponding profile."""
+
+        profile = USER.models[type](user=user, **options)
+        profile.user_id = user.id
+        user.save()
+        return profile
+
     def create(self, type: USER, **options):
         """Create a user with an enumerated user profile type."""
 
@@ -52,9 +62,7 @@ class UserManager(auth.UserManager):
                 profile_options[profile_option] = options.pop(option)
 
         user = User(**options)
-        profile = USER.models[type](user=user, **profile_options)
-        profile.user_id = user.id
-        user.save()
+        self.create_profile(user, type, **options)  # Saves the user
         return user
 
 
@@ -70,7 +78,7 @@ class User(auth.User):
         """Represent the user as a string."""
 
         try:
-            return f"<{self.profile.type.capitalize()} {self.username}>"
+            return f"<User/{self.profile.type.capitalize()} {self.username}>"
         except AttributeError:
             return f"<User {self.username}>"
 
@@ -116,6 +124,12 @@ class UserProfile(PolymorphicModel):
         """Get the display first or first name of the user."""
 
         return self.display_last_name or self.user.last_name
+
+    @property
+    def full_name(self):
+        """Get the full name of the user."""
+
+        return self.first_name + " " + self.last_name
 
 
 @USER.register(USER.STUDENT)
@@ -200,7 +214,7 @@ class Group(auth.Group):
         """Represent the group as a string."""
 
         try:
-            return f"<{self.profile.type.capitalize()} {self.name}>"
+            return f"<Group/{self.profile.type.capitalize()} {self.name}>"
         except AttributeError:
             return f"<Group {self.name}>"
 
