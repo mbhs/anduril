@@ -9,8 +9,23 @@ from polymorphic import admin as polymorphic_admin
 from django.contrib.auth import admin as auth_admin
 from django import forms
 from django.contrib.auth import forms as auth_forms
+from django.contrib.auth import validators as auth_validators
+from polymorphic import formsets as polymorphic_forms
 from django.contrib.auth.models import User, Group
+from django.utils.safestring import mark_safe
 from . import models
+from . import rules
+
+
+class UserProfileInlineFormSet(polymorphic_forms.BasePolymorphicInlineFormSet):
+    """Required user profile formset."""
+
+    def _construct_form(self, i, **kwargs):
+        """Require a profile object on instantiation."""
+
+        form = super()._construct_form(i, **kwargs)
+        form.empty_permitted = False
+        return form
 
 
 class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
@@ -32,45 +47,75 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
         model = models.AlumnusUserProfile
 
     model = models.UserProfile
-    child_inlines = (StudentUserProfileInline,)
+    child_inlines = (
+        StudentUserProfileInline,
+        TeacherUserProfileInline,
+        CounselorUserProfileInline,
+        StaffUserProfileInline,
+        AlumnusUserProfileInline)
+
+    formset = UserProfileInlineFormSet
+    max_num = 1
 
     fk_name = "user"
     can_delete = False
     verbose_name_plural = "Profile"
 
 
+class OptionalUnicodeUsernameValidator(auth_validators.UnicodeUsernameValidator):
+    """Only check username conditions if admin has entered a value."""
+
+    def __call__(self, value):
+        """Call the validator on the value if not whitespace."""
+
+        if value.strip():
+            return super().__call__(value)
+
+
 class UserCreationForm(auth_forms.UserCreationForm):
     """Add fields to user creation to support profile type."""
 
-    type = forms.ChoiceField(models.USER.choices)
+    username = auth_forms.UsernameField(
+        required=False,
+        strip=True,
+        max_length=150,
+        validators=[OptionalUnicodeUsernameValidator],
+        help_text=mark_safe("<ul><li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>"
+                            "<li>Username will be auto-generated if left blank.</li></ul>"))
 
-    def save(self, commit=True):
-        """Save the user form."""
+    def clean_username(self):
+        """Return the cleaned or auto-generated username."""
 
-        type = self.cleaned_data.get("type")
-        user = super().save(commit=False)
-        models.User.objects.create_profile(user, type)
-        if commit:
-            user.save()
-        return user
+        username = self.cleaned_data.get("username")
+        first_name = self.cleaned_data.get("first_name")
+        last_name = self.cleaned_data.get("last_name")
+        if not username:
+            if not first_name or not last_name:
+                raise forms.ValidationError("Username generation requires first and last name.")
+            username_generator = rules.generate_username(first_name, last_name)
+            username = next(username_generator)
+            while models.User.objects.filter(username=username).exists():
+                username = next(username_generator)
+        return username
 
     class Meta:
         model = models.User
-        fields = "__all__"
+        fields = ("email", "first_name", "last_name")
 
 
 class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.UserAdmin):
     """Superclass user profile inline form."""
 
-    # http://stackoverflow.com/a/23337009/3015219
     add_form = UserCreationForm
-    add_fieldsets = ((None, {"fields": ("username", "type", "password1", "password2")}),)
+    add_fieldsets = (
+        (None, {
+            "fields": ("first_name", "last_name", "username", "email", "password1", "password2")
+        }),)
 
     inlines = (UserProfileInline,)
 
 
-
+# Register the new user and group admin
 admin.site.unregister(User)
 admin.site.unregister(Group)
-
 admin.site.register(models.User, UserAdmin)
