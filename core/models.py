@@ -21,7 +21,9 @@ class USER:
     STAFF = "staff"
     ALUMNUS = "alumnus"
 
-    TYPES = (STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS)
+    TYPES = [STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS]
+
+    choices = map(lambda x: (x, x.capitalize()), TYPES)
 
     models = {}
 

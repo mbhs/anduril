@@ -42,7 +42,7 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
 class UserCreationForm(auth_forms.UserCreationForm):
     """Add fields to user creation to support profile type."""
 
-    type = forms.ChoiceField(models.USER.TYPES)
+    type = forms.ChoiceField(models.USER.choices)
 
     def save(self, commit=True):
         """Save the user form."""
@@ -50,7 +50,9 @@ class UserCreationForm(auth_forms.UserCreationForm):
         type = self.cleaned_data.get("type")
         user = super().save(commit=False)
         models.User.objects.create_profile(user, type)
-        user.save()
+        if commit:
+            user.save()
+        return user
 
     class Meta:
         model = models.User
@@ -61,7 +63,7 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
     """Superclass user profile inline form."""
 
     # http://stackoverflow.com/a/23337009/3015219
-    form = UserCreationForm
+    add_form = UserCreationForm
     add_fieldsets = ((None, {"fields": ("username", "type", "password1", "password2")}),)
 
     inlines = (UserProfileInline,)
