@@ -1,6 +1,6 @@
 """Administrative interface managers for core models.
 
-Because we're using polymorphic models, we have to put a little bit 
+Because we're using polymorphic models, we have to put a little bit
 more work into how the admin wrappers work.
 """
 
@@ -12,38 +12,31 @@ from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
 from polymorphic import formsets as polymorphic_forms
 from django.contrib.auth.models import User, Group
-from django.utils.safestring import mark_safe
 from . import models
 from . import rules
-
-
-class UserProfileInlineFormSet(polymorphic_forms.BasePolymorphicInlineFormSet):
-    """Required user profile formset."""
-
-    def _construct_form(self, i, **kwargs):
-        """Require a profile object on instantiation."""
-
-        form = super()._construct_form(i, **kwargs)
-        form.empty_permitted = False
-        return form
 
 
 class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
     """User profile inline form for the User admin interface."""
 
     class StudentUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Student user profile"
         model = models.StudentUserProfile
 
     class TeacherUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Teacher user profile"
         model = models.TeacherUserProfile
 
     class CounselorUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Counselor user profile"
         model = models.CounselorUserProfile
 
     class StaffUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Staff user profile"
         model = models.StaffUserProfile
 
     class AlumnusUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Alumnus user profile"
         model = models.AlumnusUserProfile
 
     model = models.UserProfile
@@ -54,11 +47,12 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
         StaffUserProfileInline,
         AlumnusUserProfileInline)
 
-    formset = UserProfileInlineFormSet
     max_num = 1
+    min_num = 0
+    extra = 0
 
     fk_name = "user"
-    can_delete = False
+    can_delete = True
     verbose_name_plural = "Profile"
 
 
@@ -69,7 +63,7 @@ class OptionalUnicodeUsernameValidator(auth_validators.UnicodeUsernameValidator)
         """Call the validator on the value if not whitespace."""
 
         if value.strip():
-            return super().__call__(value)
+            return super(OptionalUnicodeUsernameValidator, self).__call__(value)
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
@@ -80,8 +74,8 @@ class UserCreationForm(auth_forms.UserCreationForm):
         strip=True,
         max_length=150,
         validators=[OptionalUnicodeUsernameValidator],
-        help_text=mark_safe("<ul><li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>"
-                            "<li>Username will be auto-generated if left blank.</li></ul>"))
+        help_text=("<ul><li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>"
+                   "<li>Username will be auto-generated if left blank.</li></ul>"))
 
     def clean_username(self):
         """Return the cleaned or auto-generated username."""
@@ -107,10 +101,7 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
     """Superclass user profile inline form."""
 
     add_form = UserCreationForm
-    add_fieldsets = (
-        (None, {
-            "fields": ("first_name", "last_name", "username", "email", "password1", "password2")
-        }),)
+    add_fieldsets = ((None, {"fields": ("first_name", "last_name", "username", "email", "password1", "password2")}),)
 
     inlines = (UserProfileInline,)
 
