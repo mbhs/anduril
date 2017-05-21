@@ -10,9 +10,17 @@ from django.contrib.auth import admin as auth_admin
 from django import forms
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from . import models
 from . import rules
+
+
+USERNAME_HELP_TEXT = """\
+<ul>\
+<li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>\
+<li>Username will be auto-generated if left blank.</li>\
+</ul>
+"""
 
 
 class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
@@ -47,10 +55,38 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
         AlumnusUserProfileInline)
 
     max_num = 1
-    min_num = 0
     extra = 0
 
     fk_name = "user"
+    can_delete = True
+    verbose_name_plural = "Profile"
+
+
+class GroupProfileInline(polymorphic_admin.StackedPolymorphicInline):
+    """User profile inline form for the User admin interface."""
+
+    class AcademicGroupProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Academic group profile"
+        model = models.AcademicGroupProfile
+
+    class ClubGroupProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Club group profile"
+        model = models.ClubGroupProfile
+
+    class OrganizationGropuProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
+        verbose_name = "Organization group profile"
+        model = models.OrganizationGroupProfile
+
+    model = models.GroupProfile
+    child_inlines = (
+        AcademicGroupProfileInline,
+        ClubGroupProfileInline,
+        OrganizationGropuProfileInline)
+
+    max_num = 1
+    extra = 0
+
+    fk_name = "group"
     can_delete = True
     verbose_name_plural = "Profile"
 
@@ -73,8 +109,7 @@ class UserCreationForm(auth_forms.UserCreationForm):
         strip=True,
         max_length=150,
         validators=[OptionalUnicodeUsernameValidator],
-        help_text=("<ul><li>150 characters or fewer. Letters, digits and @/./+/-/_ only.</li>"
-                   "<li>Username will be auto-generated if left blank.</li></ul>"))
+        help_text=USERNAME_HELP_TEXT)
 
     def clean_username(self):
         """Return the cleaned or auto-generated username."""
@@ -97,7 +132,7 @@ class UserCreationForm(auth_forms.UserCreationForm):
 
 
 class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.UserAdmin):
-    """Superclass user profile inline form."""
+    """Superclass user profile admin interface."""
 
     add_form = UserCreationForm
     add_fieldsets = ((None, {"fields": ("first_name", "last_name", "username", "email", "password1", "password2")}),)
@@ -105,7 +140,15 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
     inlines = (UserProfileInline,)
 
 
+class GroupAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.GroupAdmin):
+    """Superclass group profile admin interface."""
+
+    inlines = (GroupProfileInline,)
+
+
 # Register the new user and group admin
 admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Group, GroupAdmin)
+admin.site.register(Permission)

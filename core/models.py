@@ -167,6 +167,7 @@ class GROUP:
     DEFAULT = None
     CLUB = "club"
     ACADEMIC = "academic"
+    ORGANIZATION = "organization"
 
     models = {}
 
@@ -255,3 +256,8 @@ class ClubGroupProfile(GroupProfile):
 @USER.register(GROUP.ACADEMIC)
 class AcademicGroupProfile(GroupProfile):
     """Academic organization profile."""
+
+
+@USER.register(GROUP.ORGANIZATION)
+class OrganizationGroupProfile(GroupProfile):
+    """Generic organization profile."""
