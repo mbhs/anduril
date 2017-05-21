@@ -10,7 +10,6 @@ from django.contrib.auth import admin as auth_admin
 from django import forms
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
-from polymorphic import formsets as polymorphic_forms
 from django.contrib.auth.models import User, Group
 from . import models
 from . import rules
