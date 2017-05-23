@@ -234,6 +234,11 @@ class GroupProfile(PolymorphicModel):
     title = models.CharField(max_length=80)
     description = models.CharField(max_length=160)
 
+    class Meta:
+        permissions = (("can_post", "Can post").
+                       ("can_moderate", "Can moderate"),
+                       ("can_administrate", "Can administrate"))
+
 
 @USER.register(GROUP.CLUB)
 class ClubGroupProfile(GroupProfile):
@@ -245,3 +250,5 @@ class ClubGroupProfile(GroupProfile):
 @USER.register(GROUP.ACADEMIC)
 class AcademicGroupProfile(GroupProfile):
     """Academic organization profile."""
+
+    
