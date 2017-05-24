@@ -21,11 +21,15 @@ class USER:
     STAFF = "staff"
     ALUMNUS = "alumnus"
 
+    TYPES = [STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS]
+
+    choices = map(lambda x: (x, x.capitalize()), TYPES)
+
     models = {}
 
     @staticmethod
     def register(type):
-        """Register a profile."""
+        """Register a profile class to a user enumeration."""
 
         def _register(cls):
             USER.models[type] = cls
@@ -42,17 +46,17 @@ class UserManager(auth.UserManager):
     object doesn't have a profile, we require it as a parameter.
     """
 
-    def create(self, type: USER, **options):
+    def create_user(self, username, email=None, password=None, type: USER=None, **extra_fields):
         """Create a user with an enumerated user profile type."""
 
-        profile_options = {}
-        for option in tuple(options):
-            if option.startswith("profile__"):
-                profile_option = option[len("profile__"):]
-                profile_options[profile_option] = options.pop(option)
+        profile_fields = {}
+        for field in tuple(extra_fields):
+            if field.startswith("profile__"):
+                profile_field = field[len("profile__"):]
+                profile_fields[profile_field] = extra_fields.pop(field)
 
-        user = User(**options)
-        profile = USER.models[type](user=user, **profile_options)
+        user = User(**extra_fields)
+        profile = USER.models[type](user=user, **profile_fields)
         profile.user_id = user.id
         user.save()
         return user
@@ -70,7 +74,7 @@ class User(auth.User):
         """Represent the user as a string."""
 
         try:
-            return f"<{self.profile.type.capitalize()} {self.username}>"
+            return f"<User.{self.profile.type.capitalize()} {self.username}>"
         except AttributeError:
             return f"<User {self.username}>"
 
@@ -117,6 +121,12 @@ class UserProfile(PolymorphicModel):
 
         return self.display_last_name or self.user.last_name
 
+    @property
+    def full_name(self):
+        """Get the full name of the user."""
+
+        return self.first_name + " " + self.last_name
+
 
 @USER.register(USER.STUDENT)
 class StudentUserProfile(UserProfile):
@@ -157,12 +167,13 @@ class GROUP:
     DEFAULT = None
     CLUB = "club"
     ACADEMIC = "academic"
+    ORGANIZATION = "organization"
 
     models = {}
 
     @staticmethod
     def register(type):
-        """Register a profile."""
+        """Register a profile class to a group enumeration."""
 
         def _register(cls):
             GROUP.models[type] = cls
@@ -200,7 +211,7 @@ class Group(auth.Group):
         """Represent the group as a string."""
 
         try:
-            return f"<{self.profile.type.capitalize()} {self.name}>"
+            return f"<Group.{self.profile.type.capitalize()} {self.name}>"
         except AttributeError:
             return f"<Group {self.name}>"
 
@@ -251,4 +262,7 @@ class ClubGroupProfile(GroupProfile):
 class AcademicGroupProfile(GroupProfile):
     """Academic organization profile."""
 
-    
+
+@USER.register(GROUP.ORGANIZATION)
+class OrganizationGroupProfile(GroupProfile):
+    """Generic organization profile."""
