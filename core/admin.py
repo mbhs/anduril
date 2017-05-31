@@ -62,35 +62,6 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
     verbose_name_plural = "Profile"
 
 
-class GroupProfileInline(polymorphic_admin.StackedPolymorphicInline):
-    """User profile inline form for the User admin interface."""
-
-    class AcademicGroupProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Academic group profile"
-        model = models.AcademicGroupProfile
-
-    class ClubGroupProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Club group profile"
-        model = models.ClubGroupProfile
-
-    class OrganizationGropuProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Organization group profile"
-        model = models.OrganizationGroupProfile
-
-    model = models.GroupProfile
-    child_inlines = (
-        AcademicGroupProfileInline,
-        ClubGroupProfileInline,
-        OrganizationGropuProfileInline)
-
-    max_num = 1
-    extra = 0
-
-    fk_name = "group"
-    can_delete = True
-    verbose_name_plural = "Profile"
-
-
 class OptionalUnicodeUsernameValidator(auth_validators.UnicodeUsernameValidator):
     """Only check username conditions if admin has entered a value."""
 
@@ -139,16 +110,28 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
 
     inlines = (UserProfileInline,)
 
+    list_display = ('username', 'type', 'first_name', 'last_name', 'email', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
 
-class GroupAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.GroupAdmin):
+    def type(self, obj: models.User):
+        """Return the type of user."""
+
+        return obj.profile.type.capitalize()
+
+
+class GroupAdmin(polymorphic_admin.PolymorphicParentModelAdmin):
     """Superclass group profile admin interface."""
 
-    inlines = (GroupProfileInline,)
+    model = models.Group
+
+    def get_child_models(self):
+        """Get the child models of the group."""
+
+        return models.Group.objects.all()
 
 
 # Register the new user and group admin
 admin.site.unregister(User)
-admin.site.unregister(Group)
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Group, GroupAdmin)
 admin.site.register(Permission)

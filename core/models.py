@@ -9,33 +9,7 @@ from polymorphic.models import PolymorphicModel
 from django.contrib.auth import models as auth
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-
-
-class USER:
-    """User profile enumeration and registration."""
-
-    DEFAULT = None
-    STUDENT = "student"
-    TEACHER = "teacher"
-    COUNSELOR = "counselor"
-    STAFF = "staff"
-    ALUMNUS = "alumnus"
-
-    TYPES = [STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS]
-
-    choices = map(lambda x: (x, x.capitalize()), TYPES)
-
-    models = {}
-
-    @staticmethod
-    def register(type):
-        """Register a profile class to a user enumeration."""
-
-        def _register(cls):
-            USER.models[type] = cls
-            cls.type = type
-            return cls
-        return _register
+from django.utils.translation import ugettext_lazy as _
 
 
 class UserManager(auth.UserManager):
@@ -46,7 +20,7 @@ class UserManager(auth.UserManager):
     object doesn't have a profile, we require it as a parameter.
     """
 
-    def create_user(self, username, email=None, password=None, type: USER=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, type: str=None, **extra_fields):
         """Create a user with an enumerated user profile type."""
 
         profile_fields = {}
@@ -56,7 +30,7 @@ class UserManager(auth.UserManager):
                 profile_fields[profile_field] = extra_fields.pop(field)
 
         user = User(**extra_fields)
-        profile = USER.models[type](user=user, **profile_fields)
+        profile = UserProfile.concrete[type](user=user, **profile_fields)
         profile.user_id = user.id
         user.save()
         return user
@@ -102,12 +76,40 @@ def delete_user_profile(sender, instance, **kwargs):
 class UserProfile(PolymorphicModel):
     """Base user profile model."""
 
-    user = models.OneToOneField(User, related_name="profile")
-    type = USER.DEFAULT
+    # Enumerated profile types
+    ABSTRACT = None
+    STUDENT = "student"
+    TEACHER = "teacher"
+    COUNSELOR = "counselor"
+    STAFF = "staff"
+    ALUMNUS = "alumnus"
+
+    TYPES = [STUDENT, TEACHER, COUNSELOR, STAFF, ALUMNUS]
+    choices = map(lambda x: (x, x.capitalize()), TYPES)
+    concrete = {}
+
+    @staticmethod
+    def register(type):
+        """Register a profile class to a user enumeration."""
+
+        def _register(cls):
+            UserProfile.concrete[type] = cls
+            cls.type = type
+            return cls
+        return _register
+
+    # Actual profile fields
+    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
+    type = ABSTRACT
 
     middle_name = models.CharField(blank=True, null=True, max_length=60)
     display_first_name = models.CharField(blank=True, null=True, max_length=60)
     display_last_name = models.CharField(blank=True, null=True, max_length=60)
+
+    # Meta
+    class Meta:
+        verbose_name = _('user profile')
+        verbose_name_plural = _('user profiles')
 
     @property
     def first_name(self):
@@ -128,141 +130,137 @@ class UserProfile(PolymorphicModel):
         return self.first_name + " " + self.last_name
 
 
-@USER.register(USER.STUDENT)
+@UserProfile.register(UserProfile.STUDENT)
 class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
 
-    student_id = models.CharField(max_length=8, unique=True)
-    graduation_year = models.IntegerField(blank=True, null=True)
-    counselor = models.ForeignKey(User, blank=True, null=True)
+    student_id = models.CharField(_("student id"), max_length=8, unique=True)
+    graduation_year = models.IntegerField(_("graduation year"), blank=True, null=True)
+    counselor = models.ForeignKey(User, verbose_name=_("counselor"), blank=True, null=True)
+
+    # Meta
+    class Meta:
+        verbose_name = _('student profile')
+        verbose_name_plural = _('student profiles')
 
 
-@USER.register(USER.TEACHER)
+@UserProfile.register(UserProfile.TEACHER)
 class TeacherUserProfile(UserProfile):
     """Teacher subclass of the user profile."""
 
+    # Meta
+    class Meta:
+        verbose_name = _('teacher profile')
+        verbose_name_plural = _('teacher profiles')
 
-@USER.register(USER.COUNSELOR)
+
+@UserProfile.register(UserProfile.COUNSELOR)
 class CounselorUserProfile(UserProfile):
     """Counselor subclass of the user profile."""
 
+    # Meta
+    class Meta:
+        verbose_name = _('counselor profile')
+        verbose_name_plural = _('counselor profiles')
 
-@USER.register(USER.STAFF)
+
+@UserProfile.register(UserProfile.STAFF)
 class StaffUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    title = models.CharField(max_length=30)
+    title = models.CharField(_("title"), max_length=30)
+
+    # Meta
+    class Meta:
+        verbose_name = _('staff profile')
+        verbose_name_plural = _('staff profiles')
 
 
-@USER.register(USER.ALUMNUS)
+@UserProfile.register(UserProfile.ALUMNUS)
 class AlumnusUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    graduation_year = models.IntegerField(blank=True, null=True)
+    graduation_year = models.IntegerField(_("graduation year"), blank=True, null=True)
+
+    # Meta
+    class Meta:
+        verbose_name = _('alumnus profile')
+        verbose_name_plural = _('alumnus profiles')
 
 
-class GROUP:
-    """Group profile enumeration and registration."""
+class GroupMembership(models.Model):
+    """Represents group membership with added functionality."""
 
-    DEFAULT = None
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)
+    roles = models.CharField(max_length=30)
+    join_time = models.DateTimeField()
+
+
+class Group(PolymorphicModel):
+    """Group base class.
+    
+    While the user model proxies the existing django user class in
+    order to utilize existing authentication, there are several 
+    features of groups that make it desirable to define them as a
+    standalone model. For example, members will have roles, which will
+    be stored in an intermediate membership model.
+    """
+
+    # Enumerated group types
+    ABSTRACT = None
     CLUB = "club"
     ACADEMIC = "academic"
     ORGANIZATION = "organization"
-
-    models = {}
+    concrete = {}
 
     @staticmethod
     def register(type):
         """Register a profile class to a group enumeration."""
 
         def _register(cls):
-            GROUP.models[type] = cls
+            Group.concrete[type] = cls
             cls.type = type
             return cls
         return _register
 
+    # Actual group fields
+    name = models.CharField(_("name"), max_length=80, unique=True)
+    users = models.ManyToManyField(User, verbose_name=_("users"), through=GroupMembership)
 
-class GroupManager(auth.GroupManager):
-    """User manager that modifies creation for polymorphic profiles."""
+    title = models.CharField(max_length=80)
+    description = models.CharField(max_length=160)
 
-    def create(self, type: GROUP, **options):
-        """Create a group with an enumerated group profile type."""
+    type = ABSTRACT
 
-        profile_options = {}
-        for option in tuple(options):
-            if option.startswith("profile__"):
-                profile_options[option] = options.pop(option)
-
-        group = super().create(**options)
-        profile = GROUP.models[type].objects.create(group=group, **profile_options)
-        profile.save()
-        return group
-
-
-class Group(auth.Group):
-    """Group proxy that overrides user creation"""
-
-    objects = GroupManager()
-
+    # Meta
     class Meta:
-        proxy = True
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')
 
     def __repr__(self):
         """Represent the group as a string."""
 
         try:
-            return f"<Group.{self.profile.type.capitalize()} {self.name}>"
+            return f"<Group.{self.type.capitalize()} {self.name}>"
         except AttributeError:
             return f"<Group {self.name}>"
 
     __str__ = __repr__
 
 
-@receiver(post_save, sender=Group)
-def save_group_profile(sender, instance, **kwargs):
-    """Save the corresponding profile when the group is saved."""
-
-    # TODO: test groups, this line might not be necessary
-    instance.profile.group_id = instance.id
-    instance.profile.save()
-
-
-@receiver(pre_delete, sender=Group)
-def delete_group_profile(sender, instance, **kwargs):
-    """Delete the group profile prior to group deletion."""
-
-    try:
-        instance.profile.delete()
-    except Exception as e:
-        print(f"Failed to delete user profile: {e}")
-
-
-class GroupProfile(PolymorphicModel):
-    """Superclass group profile model."""
-
-    group = models.OneToOneField(Group, related_name="profile")
-
-    title = models.CharField(max_length=80)
-    description = models.CharField(max_length=160)
-
-    class Meta:
-        permissions = (("can_post", "Can post"),
-                       ("can_moderate", "Can moderate"),
-                       ("can_administrate", "Can administrate"))
-
-
-@USER.register(GROUP.CLUB)
-class ClubGroupProfile(GroupProfile):
+@Group.register(Group.CLUB)
+class ClubGroup(Group):
     """Type of group used for extracurricular clubs."""
 
     sponsor = models.ManyToManyField(User)
 
 
-@USER.register(GROUP.ACADEMIC)
-class AcademicGroupProfile(GroupProfile):
+@Group.register(Group.ACADEMIC)
+class AcademicGroup(Group):
     """Academic organization profile."""
 
 
-@USER.register(GROUP.ORGANIZATION)
-class OrganizationGroupProfile(GroupProfile):
+@Group.register(Group.ORGANIZATION)
+class OrganizationGroup(Group):
     """Generic organization profile."""
