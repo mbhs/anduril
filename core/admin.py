@@ -10,7 +10,7 @@ from django.contrib.auth import admin as auth_admin
 from django import forms
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Permission
 from . import models
 from . import rules
 
@@ -27,23 +27,18 @@ class UserProfileInline(polymorphic_admin.StackedPolymorphicInline):
     """User profile inline form for the User admin interface."""
 
     class StudentUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Student user profile"
         model = models.StudentUserProfile
 
     class TeacherUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Teacher user profile"
         model = models.TeacherUserProfile
 
     class CounselorUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Counselor user profile"
         model = models.CounselorUserProfile
 
     class StaffUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Staff user profile"
         model = models.StaffUserProfile
 
     class AlumnusUserProfileInline(polymorphic_admin.StackedPolymorphicInline.Child):
-        verbose_name = "Alumnus user profile"
         model = models.AlumnusUserProfile
 
     model = models.UserProfile
