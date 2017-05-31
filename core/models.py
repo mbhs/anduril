@@ -246,7 +246,7 @@ class GroupProfile(PolymorphicModel):
     description = models.CharField(max_length=160)
 
     class Meta:
-        permissions = (("can_post", "Can post").
+        permissions = (("can_post", "Can post"),
                        ("can_moderate", "Can moderate"),
                        ("can_administrate", "Can administrate"))
 
