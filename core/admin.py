@@ -8,6 +8,7 @@ from django.contrib import admin
 from polymorphic import admin as polymorphic_admin
 from django.contrib.auth import admin as auth_admin
 from django import forms
+from django.db.utils import OperationalError
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
 from django.contrib.auth.models import User, Permission
@@ -122,7 +123,11 @@ class GroupAdmin(polymorphic_admin.PolymorphicParentModelAdmin):
     def get_child_models(self):
         """Get the child models of the group."""
 
-        return models.Group.objects.all()
+        try:
+            return models.Group.objects.all()
+        except OperationalError:
+            print("Warning: group tables not created yet.")
+            return []
 
 
 # Register the new user and group admin
