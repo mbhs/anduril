@@ -8,11 +8,9 @@ from django.contrib import admin
 from polymorphic import admin as polymorphic_admin
 from django.contrib.auth import admin as auth_admin
 from django import forms
-from django.db.utils import OperationalError
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
 from django.contrib.auth.models import User, Permission
-from django.db import connection
 from . import models
 from . import rules
 

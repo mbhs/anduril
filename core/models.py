@@ -48,7 +48,7 @@ class User(auth.User):
         """Represent the user as a string."""
 
         try:
-            return f"<User.{self.profile.type.capitalize()} {self.username}>"
+            return f"<{self.profile.type.capitalize()} {self.username}>"
         except AttributeError:
             return f"<User {self.username}>"
 
@@ -128,6 +128,38 @@ class UserProfile(PolymorphicModel):
         """Get the full name of the user."""
 
         return self.first_name + " " + self.last_name
+
+
+class UserStatistics(models.Model):
+    """User statistics object.
+    
+    This is here to collect arbitrary bits of data about site usage, 
+    including login counts, first join date, etc.
+    """
+
+    user = models.OneToOneField(User, verbose_name=_("statistics"), related_name="statistics")
+    first_login = models.DateTimeField(blank=True, null=True)
+    login_count = models.IntegerField(default=0)
+
+    def __repr__(self):
+        """Represent the container as a string."""
+
+        return f"<Statistics for {self.user.get_full_name()}>"
+
+
+@receiver(post_save, sender=User)
+def create_user_statistics(sender, instance, created, **kwargs):
+    """Instantiate a new statistics container every time a user is created."""
+
+    if created:
+        UserStatistics.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_statistics(sender, instance, **kwargs):
+    """Save the corresponding statistics container when the user is saved."""
+
+    instance.statistics.save()
 
 
 @UserProfile.register(UserProfile.STUDENT)
