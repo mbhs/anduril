@@ -29,7 +29,7 @@ class UserManager(auth.UserManager):
                 profile_field = field[len("profile__"):]
                 profile_fields[profile_field] = extra_fields.pop(field)
 
-        user = User(**extra_fields)
+        user = User(username=username, **extra_fields)
         profile = UserProfile.concrete[type](user=user, **profile_fields)
         profile.user_id = user.id
         user.save()
@@ -227,9 +227,8 @@ class Group(PolymorphicModel):
     # Actual group fields
     name = models.CharField(_("name"), max_length=80, unique=True)
     users = models.ManyToManyField(User, verbose_name=_("users"), through=GroupMembership)
-
     title = models.CharField(max_length=80)
-    description = models.CharField(max_length=160)
+    description = models.TextField()
 
     type = ABSTRACT
 

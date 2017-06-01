@@ -12,6 +12,7 @@ from django.db.utils import OperationalError
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import validators as auth_validators
 from django.contrib.auth.models import User, Permission
+from django.db import connection
 from . import models
 from . import rules
 
@@ -115,23 +116,30 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
         return obj.profile.type.capitalize()
 
 
+class ClubGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.ClubGroup
+
+
+class AcademicGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.AcademicGroup
+
+
+class OrganizationGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.OrganizationGroup
+
+
 class GroupAdmin(polymorphic_admin.PolymorphicParentModelAdmin):
     """Superclass group profile admin interface."""
 
-    model = models.Group
-
-    def get_child_models(self):
-        """Get the child models of the group."""
-
-        try:
-            return models.Group.objects.all()
-        except OperationalError:
-            print("Warning: group tables not created yet.")
-            return []
+    base_model = models.Group
+    child_models = (models.ClubGroup, models.AcademicGroup, models.OrganizationGroup)
 
 
 # Register the new user and group admin
 admin.site.unregister(User)
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.ClubGroup, ClubGroupAdmin)
+admin.site.register(models.AcademicGroup, AcademicGroupAdmin)
+admin.site.register(models.OrganizationGroup, OrganizationGroupAdmin)
 admin.site.register(models.Group, GroupAdmin)
 admin.site.register(Permission)
