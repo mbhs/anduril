@@ -1,0 +1,39 @@
+{% extends "home/base/empty.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/static/css/login.css">
+<script type="text/javascript" src="/static/js/parameters.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="center-container">
+    <div class="center">
+        <form id="login" action="/login/" method="post">
+            {% csrf_token %}
+
+            <span class="logo">MBHS<span class="red">Home</span></span>
+            <input name="username" type="text" class="form-control" placeholder="username">
+            <input name="password" type="password" class="form-control" placeholder="password">
+            <div class="login-under">
+
+                <label id="error">Invalid credentials!</label>
+                <script type="text/javascript">
+                    if (parameters.hasOwnProperty("error"))
+                        $("#error")[0].classList.add("visible");
+                </script>
+
+                <button name="help" type="button" class="btn btn-custom">Help</button>
+                <button name="submit" type="submit" class="btn btn-primary">Login</button>
+
+                {% if notice %}
+                    <div id="notice">{{ notice }}</div>
+                {% endif %}
+
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

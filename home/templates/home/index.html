@@ -1,0 +1,107 @@
+{% extends "home/base/default.html" %}
+{% load slug %}
+{% load full_name %}
+
+
+{% block title %}{{ user|full_name }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+{% endblock %}
+
+{% block header %}
+{{ user|full_name }}
+{% endblock %}
+
+{% block subheader %}
+{{ user.username }}
+{% if user.profile.student_id %} &middot; {{ user.profile.student_id }}{% endif %}
+&middot; {{ user.profile.description }}
+{% endblock %}
+
+{% block content %}
+
+<div class="tab col-md-6">
+    {% if request.user.profile.type == 0 %}
+        {% for semester in semesters %}
+        <h5 class="label">Semester {{ forloop.counter }}</h5>
+        <table class="sections">
+        {% for section in semester %}
+            <tr>
+                <td class="period">{{ section.period }}</td>
+                <td class="name">
+                    <a href="{{ section|slug }}">
+                        {{ section.course.name }}
+                    </a>
+                </td>
+                <td class="teacher"><a href="{{ section.teacher|slug }}">{{ section.teacher.last_name }}</a></td>
+                <td class="room">{{ section.room }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endfor %}
+    {% else %}
+        <h5 class="label">Dashboard</h5>
+        <a href="/admin">Admin</a>
+    {% endif %}
+</div>
+
+<div class="tab col-md-3">
+    <h5 class="label">Groups ({{ groups.count }})</h5>
+    <table class="groups">
+    {% for group in groups %}
+        <tr>
+            <td>{{ group.name }}</td>
+        </tr>
+    {% endfor %}
+        <tr><td><a href="/groups/">Join groups...</a></td></tr>
+    </table>
+</div>
+
+<div class="tab col-md-3">
+    <h5 class="label">Friends ({{ friends.count }})</h5>
+    <table class="groups">
+    {% for friend in friends %}
+        <tr>
+            <td>
+                <a href="{{ friend|slug }}">{{ friend|full_name }}</a>
+                (<a href="/friend/remove/{{ friend.username }}">Remove</a>)
+            </td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td>
+                <a href="/users/">Add friends...</a>
+            </td>
+        </tr>
+    </table>
+    {% if pending_friends.count > 0 %}
+        <h5 class="label">Pending Friends ({{ pending_friends.count }})</h5>
+        <table class="groups">
+        {% for friend in pending_friends %}
+            <tr>
+                <td>
+                    <a href="{{ friend|slug }}">{{ friend|full_name }}</a>
+                    (<a href="/friend/cancel/{{ friend.username }}">Cancel</a>)
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+    {% if friend_requests.count > 0 %}
+        <h5 class="label">Friend Requests ({{ friend_requests.count }})</h5>
+        <table class="groups">
+        {% for friend in friend_requests %}
+            <tr>
+                <td>
+                    <a href="{{ friend|slug }}">{{ friend|full_name }}</a>
+                    (<a href="/friend/confirm/{{ friend.username }}">Confirm</a>)
+                    (<a href="/friend/deny/{{ friend.username }}">Deny</a>)
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -54,6 +54,12 @@ class User(auth.User):
 
     __str__ = __repr__
 
+    @property
+    def slug(self):
+        """Get the URL slug of the model."""
+
+        return f"/users/{self.id}"
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -110,6 +116,12 @@ class UserProfile(PolymorphicModel):
     class Meta:
         verbose_name = _('user profile')
         verbose_name_plural = _('user profiles')
+
+    @property
+    def slug(self):
+        """Get the URL slug of the model."""
+
+        return self.user.slug
 
     @property
     def first_name(self):
@@ -278,6 +290,12 @@ class Group(PolymorphicModel):
             return f"<Group {self.name}>"
 
     __str__ = __repr__
+
+    @property
+    def slug(self):
+        """Get the URL slug of the model."""
+
+        return f"/groups/{self.id}"
 
 
 @Group.register(Group.CLUB)
