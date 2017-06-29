@@ -18,9 +18,7 @@
       margin-bottom: 1px;
     }
 
-    .red {
-      color: $brand-primary;
-    }
+    .red { color: $primary; }
 
     form#login {
       width: 350px;
@@ -29,22 +27,18 @@
       input[name="username"] {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
-        border-bottom: none;
+        border-bottom-color: transparent;
         margin-bottom: -1px;
-      }
-
-      input[name="username"]:focus {
-        outline: none;
       }
 
       input[name="password"] {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        outline: none;
       }
 
       input[name="username"]:focus + input[name="password"] {
-        border-top-color: $brand-primary;
-        outline: none;
+        border-top-color: $primary-input;
       }
 
       input[name="submit"] {

@@ -20,16 +20,14 @@
       #login.container-center .center form#login input[name="username"] {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
-        border-bottom: none;
+        border-bottom-color: transparent;
         margin-bottom: -1px; }
-      #login.container-center .center form#login input[name="username"]:focus {
-        outline: none; }
       #login.container-center .center form#login input[name="password"] {
         border-top-left-radius: 0;
-        border-top-right-radius: 0; }
-      #login.container-center .center form#login input[name="username"]:focus + input[name="password"] {
-        border-top-color: #9f2727;
+        border-top-right-radius: 0;
         outline: none; }
+      #login.container-center .center form#login input[name="username"]:focus + input[name="password"] {
+        border-top-color: #db6b6b; }
       #login.container-center .center form#login input[name="submit"] {
         width: 100px;
         float: right; }
