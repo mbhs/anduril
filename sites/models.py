@@ -35,6 +35,7 @@ class Url(models.Model):
     """A base URL owned by the hosting organization."""
 
     url = models.URLField(_("URL"))
+    site = models.ForeignKey("Site")
 
 
 class SubdomainUrl(models.Model):
@@ -42,3 +43,7 @@ class SubdomainUrl(models.Model):
 
     base = models.ForeignKey(Url, name=_("Base URL"), related_name="subdomains")
     head = URLSafeField(max_length=50)
+
+
+class Site(models.Model):
+    """Represent a site hosted on the host website."""

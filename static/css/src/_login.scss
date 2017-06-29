@@ -1,0 +1,96 @@
+@import "theme";
+
+#login.container-center {
+  display: table;
+  width: 100%;
+  height: 100%;
+
+  .center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+
+    .logo {
+      display: block;
+      font-size: 30px;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 1px;
+    }
+
+    .red {
+      color: $brand-primary;
+    }
+
+    form#login {
+      width: 350px;
+      margin: auto;
+
+      input[name="username"] {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+        margin-bottom: -1px;
+      }
+
+      input[name="username"]:focus {
+        outline: none;
+      }
+
+      input[name="password"] {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      input[name="username"]:focus + input[name="password"] {
+        border-top-color: $brand-primary;
+        outline: none;
+      }
+
+      input[name="submit"] {
+        width: 100px;
+        float: right;
+      }
+    }
+
+    .login-under {
+      display: block;
+      margin-top: 10px;
+      text-align: right;
+
+      button {
+        margin-left: 3px;
+      }
+    }
+
+    .btn-custom {
+      border-color: #9f2727;
+      color: #9f2727;
+      background-color: transparent;
+    }
+
+    .btn-no-padding {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    #notice {
+      color: #9f2727;
+      text-align: center;
+      margin-top: 3em;
+    }
+
+    #error {
+      float: left;
+      display: none;
+      color: #9f2727;
+      margin-bottom: 0;
+      padding: 6px 1px;
+    }
+
+    #error.visible {
+      display: inline-block;
+    }
+
+  }
+}

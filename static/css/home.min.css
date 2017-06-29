@@ -1,3 +1,62 @@
-
+#login.container-center {
+  display: table;
+  width: 100%;
+  height: 100%; }
+  #login.container-center .center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle; }
+    #login.container-center .center .logo {
+      display: block;
+      font-size: 30px;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 1px; }
+    #login.container-center .center .red {
+      color: #9f2727; }
+    #login.container-center .center form#login {
+      width: 350px;
+      margin: auto; }
+      #login.container-center .center form#login input[name="username"] {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+        margin-bottom: -1px; }
+      #login.container-center .center form#login input[name="username"]:focus {
+        outline: none; }
+      #login.container-center .center form#login input[name="password"] {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0; }
+      #login.container-center .center form#login input[name="username"]:focus + input[name="password"] {
+        border-top-color: #9f2727;
+        outline: none; }
+      #login.container-center .center form#login input[name="submit"] {
+        width: 100px;
+        float: right; }
+    #login.container-center .center .login-under {
+      display: block;
+      margin-top: 10px;
+      text-align: right; }
+      #login.container-center .center .login-under button {
+        margin-left: 3px; }
+    #login.container-center .center .btn-custom {
+      border-color: #9f2727;
+      color: #9f2727;
+      background-color: transparent; }
+    #login.container-center .center .btn-no-padding {
+      padding-left: 0;
+      padding-right: 0; }
+    #login.container-center .center #notice {
+      color: #9f2727;
+      text-align: center;
+      margin-top: 3em; }
+    #login.container-center .center #error {
+      float: left;
+      display: none;
+      color: #9f2727;
+      margin-bottom: 0;
+      padding: 6px 1px; }
+    #login.container-center .center #error.visible {
+      display: inline-block; }
 
 /*# sourceMappingURL=home.min.css.map */

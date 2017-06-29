@@ -9,15 +9,11 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-        {% if menubar is not False %} {% include "home/base/menubar.html" %} {% endif %}
-        <div class="container-fluid">
-            <div class="header">
-                <h1 class="title">{% block header %}{% endblock %}</h1>
-                <h2 class="subtitle">{% block subheader %}{% endblock %}</h2>
-            </div>
-            <div id="{{ id }}" class="content">
-                {% block content %}{% endblock %}
-            </div>
+        {% block menubar %}
+            {% include "home/base/menubar.html" %}
+        {% endblock %}
+        <div class="content">
+            {% block content %}{% endblock %}
         </div>
     </body>
 </html>

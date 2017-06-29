@@ -3,3 +3,5 @@
 migrations/
 __pycache__/
 venv/
+.sass-cache/
+

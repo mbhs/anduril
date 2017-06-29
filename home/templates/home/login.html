@@ -1,4 +1,4 @@
-{% extends "home/base/empty.html" %}
+{% extends "home/base/base.html" %}
 
 {% block title %}Login{% endblock %}
 
@@ -6,8 +6,10 @@
 <script type="text/javascript" src="/static/js/parameters.js"></script>
 {% endblock %}
 
+{% block menubar %}{% endblock %}
+
 {% block content %}
-<div class="center-container">
+<div id="login" class="container-center">
     <div class="center">
         <form id="login" action="/login/" method="post">
             {% csrf_token %}
