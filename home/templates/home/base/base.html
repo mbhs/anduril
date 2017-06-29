@@ -1,0 +1,23 @@
+{% load full_name %}
+
+<html lang="en-US">
+    <head>
+        <title>MBHS - {% block title %}{% endblock %}</title>
+        <meta charset="utf-8">
+        {% include "home/base/bootstrap.html" %}
+        <link rel="stylesheet" type="text/css" href="/static/css/home.min.css">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% if menubar is not False %} {% include "home/base/menubar.html" %} {% endif %}
+        <div class="container-fluid">
+            <div class="header">
+                <h1 class="title">{% block header %}{% endblock %}</h1>
+                <h2 class="subtitle">{% block subheader %}{% endblock %}</h2>
+            </div>
+            <div id="{{ id }}" class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
