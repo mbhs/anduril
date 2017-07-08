@@ -5,24 +5,44 @@
   top: 0;
   padding: 0;
   margin: 0;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
 
   .header {
     top: 0;
-    position: relative;
   }
 
   .menu {
     top: 0;
-    position: relative;
-    padding: 0.5em;
     height: 100%;
     white-space: nowrap;
     color: #ccc;
     background-color: #555;
+    flex-grow: 1;
+    padding-top: 0.5em;
 
-    .list-group-item:not(.collapsed) {
-      background-color: #222;
+    .item, .section {
+      padding: 0.25em 1em;
+      text-decoration: none;
+      color: inherit;
+      display: block;
     }
+
+    .section {
+      font-weight: bold;
+    }
+
+    .item {
+      cursor: pointer;
+    }
+
+    .item:hover {
+      color: inherit;
+      background-color: #666;
+    }
+
   }
 
 }
