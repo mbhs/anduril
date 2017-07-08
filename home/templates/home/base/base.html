@@ -21,24 +21,11 @@
         </div>
         {% endblock %}
         <div class="row main">
-            {% block sidebar %}
             <div id="sidebar" class="col-lg-2 col-md-4 col-sm-4 no-float">
                 <div class="menu">
-                    <div class="section">Dashboard</div>
-                    <a class="item">News</a>
-                    <a class="item">Courses</a>
-                    <a class="item">Friends</a>
-                    <div class="section">Groups</div>
-                    <a class="item">Add groups...</a>
-                    <div class="section">Counseling</div>
-                    <a class="item">Meetings</a>
-                    <div class="section">Account</div>
-                    <a class="item">Profile</a>
-                    <a class="item">Settings</a>
-                    <a class="item" href="{% url "logout" %}">Logout</a>
+                    {% block sidebar %}{% endblock sidebar %}
                 </div>
             </div>
-            {% endblock sidebar %}
             <div id="main" class="col-lg-10 col-md-8 col-sm-8 no-float">
                 <div id="content">
                     {% block content %}{% endblock %}

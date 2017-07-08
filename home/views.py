@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.decorators import permission_required, login_required
 from core import models
+from .utils import profile_type
 
 
 def login(request):
@@ -24,7 +25,7 @@ def login(request):
     return render(request, "home/login.html")
 
 
-@login_required()
+@login_required
 def logout(request):
     """Log out the currently logged in user."""
 
@@ -37,4 +38,4 @@ def logout(request):
 def index(request):
     """Return the example index page."""
 
-    return render(request, "home/index.html")
+    return render(request, "home/student/index.html")
