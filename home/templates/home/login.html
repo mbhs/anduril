@@ -20,10 +20,14 @@
             <input name="password" type="password" class="form-control" placeholder="password">
             <div class="login-under">
 
-                <label id="error">Invalid credentials!</label>
+                <label id="error"></label>
                 <script type="text/javascript">
-                    if (parameters.hasOwnProperty("error"))
-                        $("#error")[0].classList.add("visible");
+                    if (parameters.hasOwnProperty("error")) {
+                        var error = $("#error")[0];
+                        if (parameters["error"] === "1") error.innerHTML = "Invalid credentials!";
+                        else if (parameters["error"] === "2") error.innerHTML = "Insufficient permission!";
+                        error.classList.add("visible");
+                    }
                 </script>
 
                 <button name="help" type="button" class="btn btn-custom">Help</button>

@@ -7,10 +7,10 @@ def profile_type(*types):
     """Require specific profile types to access a view."""
 
     def decorator(view):
-        """Wraps a view function."""
+        """Wraps the underlying view function."""
 
         def view_wrapper(request, *args, **kwargs):
-            """Represents the actual view function."""
+            """View that requires profile type to be in specified."""
 
             if request.user and request.user.profile and request.user.profile.type in types:
                 return view(request, *args, **kwargs)
