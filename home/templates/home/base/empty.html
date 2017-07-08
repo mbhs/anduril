@@ -1,0 +1,14 @@
+<html lang="en-US">
+    <head>
+        <title>MBHS - {% block title %}{% endblock %}</title>
+        <meta charset="utf-8">
+        {% include "home/base/bootstrap.html" %}
+        <link rel="stylesheet" type="text/css" href="/static/css/home.min.css">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

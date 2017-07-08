@@ -29,7 +29,7 @@ def logout(request):
     """Log out the currently logged in user."""
 
     if request.user:
-        auth.logout(request.user)
+        auth.logout(request)
     return redirect("login")
 
 
