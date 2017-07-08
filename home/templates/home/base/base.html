@@ -8,12 +8,21 @@
         <link rel="stylesheet" type="text/css" href="/static/css/home.min.css">
         {% block head %}{% endblock %}
     </head>
-    <body>
-        {% block menubar %}
-            {% include "home/base/menubar.html" %}
-        {% endblock %}
-        <div class="content">
-            {% block content %}{% endblock %}
+    <body class="container-fluid">
+        <div class="row">
+            {% block sidebar %}
+            <div id="sidebar" class="col-lg-2 col-md-3 col-sm-3 col-xs-1">
+                {% include "home/base/sidebar.html" %}
+            </div>
+            {% endblock sidebar %}
+            <div id="content" class="col-lg-10 col-md-9 col-sm-3 col-xs-11">
+                {% block header %}
+                <div id="header">
+                    {% include "home/base/header.html" %}
+                </div>
+                {% endblock %}
+                {% block content %}{% endblock %}
+            </div>
         </div>
     </body>
 </html>

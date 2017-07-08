@@ -59,6 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
+        'APP_DIRS': True,  # Comment to use template cache
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -66,11 +67,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                ('django.template.loaders.cached.Loader', [
-                  'django.template.loaders.filesystem.Loader',
-                  'django.template.loaders.app_directories.Loader']),
-            ]
+            # 'loaders': [
+            #     ('django.template.loaders.cached.Loader', [
+            #       'django.template.loaders.filesystem.Loader',
+            #       'django.template.loaders.app_directories.Loader']),
+            # ]
         },
     },
 ]
@@ -128,3 +129,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+
+# Login URL
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOGIN_URL
+
+LOGIN_URL = "/login/"
