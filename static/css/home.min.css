@@ -24,11 +24,11 @@ body {
     display: inline-block;
     text-decoration: none;
     color: white !important;
-    margin-right: 2em; }
+    margin-right: 1.5em; }
   #menubar .item.right {
     float: right;
     margin-right: 0;
-    margin-left: 2em; }
+    margin-left: 1.5em; }
 
 #sidebar {
   padding: 0;
