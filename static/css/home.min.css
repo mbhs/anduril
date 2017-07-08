@@ -1,44 +1,55 @@
 .primary {
   color: #9f2727; }
 
-.header {
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column; }
+
+.row.menubar {
+  display: block; }
+
+#sidebar, #main {
+  flex-grow: 1; }
+
+#menubar {
   width: 100%;
   height: 3.5em;
   line-height: 3.5em;
   background-color: #9f2727;
   padding: 0 1em;
   vertical-align: middle; }
-  .header .item {
+  #menubar .item {
     font-size: 18px;
     display: inline-block;
     text-decoration: none;
-    color: white !important; }
-
-#sidebar, #main {
-  display: flex;
-  flex-direction: column; }
+    color: white !important;
+    margin-right: 2em; }
+  #menubar .item.right {
+    float: right;
+    margin-right: 0;
+    margin-left: 2em; }
 
 #sidebar {
-  top: 0;
   padding: 0;
   margin: 0;
-  height: 100vh; }
-  #sidebar .header {
-    top: 0; }
+  display: flex;
+  flex-direction: column; }
   #sidebar .menu {
-    top: 0;
-    height: 100%;
+    flex-grow: 1;
     white-space: nowrap;
     color: #ccc;
     background-color: #555;
-    flex-grow: 1; }
+    margin-top: 0;
+    box-sizing: border-box;
+    padding-bottom: 1em; }
     #sidebar .menu .item, #sidebar .menu .section {
       padding: 0.25em 1em;
       text-decoration: none;
       color: inherit;
       display: block; }
     #sidebar .menu .section {
-      margin-top: 1em;
+      padding-top: 1em;
       font-weight: bold; }
     #sidebar .menu .item {
       cursor: pointer; }
@@ -49,12 +60,8 @@
 #main {
   padding: 0;
   width: 100%;
-  height: 100vh; }
-  #main #header {
-    display: block; }
-    #main #header .header .item {
-      float: right;
-      margin-left: 2em; }
+  display: flex;
+  flex-direction: column; }
   #main #content {
     flex-grow: 1;
     overflow-y: scroll;
@@ -62,6 +69,12 @@
     #main #content h1 {
       font-size: 48px; }
 
+@media (max-width: 768px) {
+  #main #sidebar {
+    height: auto; }
+
+  #main #content {
+    overflow-y: visible; } }
 .primary {
   color: #9f2727; }
 

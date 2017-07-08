@@ -1,6 +1,0 @@
-<div class="header">
-    <a class="item" href="{% url "logout" %}">
-        {% if user.is_authenticated %} Logout {% else %} Login {% endif %}
-    </a>
-    <a class="item" href="{% url "account" %}">{{ user.get_full_name }}</a>
-</div>

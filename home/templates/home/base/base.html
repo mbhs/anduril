@@ -9,18 +9,36 @@
         {% block head %}{% endblock %}
     </head>
     <body class="container-fluid">
-        <div class="row">
+        {% block menubar %}
+        <div class="row menubar">
+            <div id="menubar">
+                <a class="item" href="{% url "index" %}">Home</a>
+                <a class="item right" href="{% url "logout" %}">
+                    {% if user.is_authenticated %} Logout {% else %} Login {% endif %}
+                </a>
+                <a class="item right" href="{% url "account" %}">{{ user.get_full_name }}</a>
+            </div>
+        </div>
+        {% endblock %}
+        <div class="row main">
             {% block sidebar %}
-            <div id="sidebar" class="col-lg-2 col-md-3 col-sm-3">
-                {% include "home/base/sidebar.html" %}
+            <div id="sidebar" class="col-lg-2 col-md-4 col-sm-4 no-float">
+                <div class="menu">
+                    <div class="section">Dashboard</div>
+                    <a class="item">News</a>
+                    <a class="item">Courses</a>
+                    <a class="item">Friends</a>
+                    <div class="section">Groups</div>
+                    <a class="item">Add groups...</a>
+                    <div class="section">Counseling</div>
+                    <a class="item">Meetings</a>
+                    <div class="section">Account</div>
+                    <a class="item">Profile</a>
+                    <a class="item">Settings</a>
+                </div>
             </div>
             {% endblock sidebar %}
-            <div id="main" class="col-lg-10 col-md-9 col-sm-9">
-                {% block header %}
-                <div id="header">
-                    {% include "home/base/header.html" %}
-                </div>
-                {% endblock %}
+            <div id="main" class="col-lg-10 col-md-8 col-sm-8 no-float">
                 <div id="content">
                     {% block content %}{% endblock %}
                 </div>
