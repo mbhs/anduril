@@ -7,9 +7,21 @@ via the polymorphic library, to serve as different types of each.
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth import models as auth
+from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+
+
+class TimeTrackingModel(models.Model):
+    """Tracks creation and modification date times."""
+
+    creation_time = models.DateTimeField(auto_now_add=True)
+    modification_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
 
 class UserManager(auth.UserManager):
@@ -79,7 +91,7 @@ def delete_user_profile(sender, instance, **kwargs):
         print("Failed to delete user profile:", e)
 
 
-class UserProfile(PolymorphicModel):
+class UserProfile(PolymorphicModel, TimeTrackingModel):
     """Base user profile model."""
 
     # Enumerated profile types
@@ -174,6 +186,16 @@ def save_user_statistics(sender, instance, **kwargs):
     instance.statistics.save()
 
 
+@receiver(user_logged_in)
+def update_user_login_statistics(sender, user, request, **kwargs):
+    """Called when a user logs into the system."""
+
+    if user.statistics.login_count == 0:
+        user.statistics.first_login = timezone.now()
+    user.statistics.login_count += 1
+    user.statistics.save()
+
+
 @UserProfile.register(UserProfile.STUDENT)
 class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
@@ -232,16 +254,15 @@ class AlumnusUserProfile(UserProfile):
         verbose_name_plural = _('alumnus profiles')
 
 
-class GroupMembership(models.Model):
+class GroupMembership(TimeTrackingModel):
     """Represents group membership with added functionality."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey("Group", on_delete=models.CASCADE)
     roles = models.CharField(max_length=30)
-    join_time = models.DateTimeField()
 
 
-class Group(PolymorphicModel):
+class Group(PolymorphicModel, TimeTrackingModel):
     """Group base class.
     
     While the user model proxies the existing django user class in

@@ -1,8 +1,8 @@
 from django.db import models
-from core.models import User, Group
+from core.models import User, Group, TimeTrackingModel
 
 
-class Friendship(models.Model):
+class Friendship(TimeTrackingModel):
     """A friendship between two users."""
 
     a = models.ForeignKey(User, related_name="+")
