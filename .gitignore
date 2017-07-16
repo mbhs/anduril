@@ -4,4 +4,4 @@ migrations/
 __pycache__/
 venv/
 .sass-cache/
-
+.DS_Store

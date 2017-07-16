@@ -301,6 +301,8 @@ class Group(PolymorphicModel, TimeTrackingModel):
     class Meta:
         verbose_name = _('group')
         verbose_name_plural = _('groups')
+        permissions = (
+            ("can_manage_groups", "Can manage groups"),)
 
     def __repr__(self):
         """Represent the group as a string."""

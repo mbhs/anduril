@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import Permission, ContentType
+
 from core.models import User, Group, TimeTrackingModel
 
 
@@ -23,3 +25,12 @@ class Friendship(TimeTrackingModel):
         ids = (set(Friendship.objects.filter(a=user, confirmed=confirmed).values_list("b", flat=True)) |
                set(Friendship.objects.filter(b=user, confirmed=confirmed).values_list("a", flat=True)))
         return User.objects.filter(pk__in=ids)
+
+
+class Permissions(models.Model):
+    """Permissions container not managed in the database."""
+
+    class Meta:
+        managed = False
+        permissions = (
+            ("can_login", "Can login to home"),)
