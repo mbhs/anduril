@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ["home.mbhs.edu", "localhost"]
 
 INSTALLED_APPS = [
     'polymorphic',
+    'oauth2_provider',
+    'corsheaders',
     'core',
     'home',
     'groups',

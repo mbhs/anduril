@@ -1,8 +1,6 @@
-from django.shortcuts import render, redirect
 from django.contrib import auth
-from django.contrib.auth.decorators import permission_required, login_required
-from core import models
-from .utils import profile_type
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 
 def login(request):
@@ -15,11 +13,11 @@ def login(request):
         if user is not None:
             if user.is_staff or user.has_perm("can_login"):
                 auth.login(request, user)
-                return redirect("index")
-            response = redirect("login")
+                return redirect("home:index")
+            response = redirect("home:login")
             response["Location"] += "?error=2"
             return response
-        response = redirect("login")
+        response = redirect("home:login")
         response["Location"] += "?error=1"
         return response
     return render(request, "home/login.html")
@@ -31,7 +29,7 @@ def logout(request):
 
     if request.user:
         auth.logout(request)
-    return redirect("login")
+    return redirect("home:login")
 
 
 @login_required
