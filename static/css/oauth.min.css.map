@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAIA,QAAS;EAAE,KAAK,EAJN,OAAO;;ACGf,0EAAwB;EAAE,KAAK,EAAE,IAAI;AAErC,+BAAe;EACb,aAAa,EAAE,MAAM;EAErB,8CAAe;IACb,aAAa,EAAE,OAAO;AAK1B,4CAA4B;EAC1B,UAAU,EAAE,MAAM;EAClB,aAAa,EAAE,CAAC;EAChB,OAAO,EAAE,KAAK;;AAIlB,IAAK;EACH,MAAM,EAAE,iBAAkB",
-"sources": ["src/_theme.scss","src/oauth.scss"],
-"names": [],
-"file": "oauth.min.css"
-}

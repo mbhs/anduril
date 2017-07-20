@@ -9,6 +9,9 @@ body {
 .row.menubar {
   display: block; }
 
+.row.main {
+  flex-grow: 1; }
+
 #sidebar, #main {
   flex-grow: 1; }
 
@@ -60,6 +63,7 @@ body {
 #main {
   padding: 0;
   width: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column; }
   #main #content {
@@ -92,21 +96,21 @@ body {
       width: 100%;
       text-align: left;
       margin-bottom: 1px; }
-    #login.container-center .center form#login {
+    #login.container-center .center form#login-form {
       width: 350px;
       margin: auto; }
-      #login.container-center .center form#login input[name="username"] {
+      #login.container-center .center form#login-form input[name="username"] {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-bottom-color: transparent;
         margin-bottom: -1px; }
-      #login.container-center .center form#login input[name="password"] {
+      #login.container-center .center form#login-form input[name="password"] {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         outline: none; }
-      #login.container-center .center form#login input[name="username"]:focus + input[name="password"] {
+      #login.container-center .center form#login-form input[name="username"]:focus + input[name="password"] {
         border-top-color: #db6b6b; }
-      #login.container-center .center form#login input[name="submit"] {
+      #login.container-center .center form#login-form input[name="submit"] {
         width: 100px;
         float: right; }
     #login.container-center .center .login-under {
@@ -138,4 +142,4 @@ body {
 .primary {
   color: #9f2727; }
 
-/*# sourceMappingURL=home.min.css.map */
+/*# sourceMappingURL=anduril.min.css.map */

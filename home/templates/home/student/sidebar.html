@@ -1,5 +1,3 @@
-{% extends "home/base/base.html" %}
-{% block sidebar %}
 <div class="section">Dashboard</div>
 <a class="item">News</a>
 <a class="item">Courses</a>
@@ -8,8 +6,9 @@
 <a class="item">Add groups...</a>
 <div class="section">Counseling</div>
 <a class="item">Meetings</a>
+<div class="section">Applications</div>
+<a class="item" href="{% url "oauth2_provider:list" %}">List</a>
 <div class="section">Account</div>
 <a class="item">Profile</a>
 <a class="item">Settings</a>
 <a class="item" href="{% url "home:logout" %}">Logout</a>
-{% endblock %}

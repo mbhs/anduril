@@ -5,7 +5,7 @@
         <title>MBHS - {% block title %}{% endblock %}</title>
         <meta charset="utf-8">
         {% include "home/base/bootstrap.html" %}
-        <link rel="stylesheet" type="text/css" href="/static/css/home.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/anduril.min.css">
         {% block head %}{% endblock %}
     </head>
     <body class="container-fluid">
@@ -26,11 +26,15 @@
         <div class="row main">
             <div id="sidebar" class="col-lg-2 col-md-4 col-sm-4 no-float">
                 <div class="menu">
-                    {% block sidebar %}{% endblock sidebar %}
+                    {% block sidebar %}
+                        {% if user.profile.type == "student" %}
+                            {% include "home/student/sidebar.html" %}
+                        {% endif %}
+                    {% endblock sidebar %}
                 </div>
             </div>
             <div id="main" class="col-lg-10 col-md-8 col-sm-8 no-float">
-                <div id="content">
+                <div id="content" class="{% block class %}{% endblock %}">
                     {% block content %}{% endblock %}
                 </div>
             </div>
