@@ -1,0 +1,24 @@
+@import "theme";
+
+.form-horizontal {
+  input, select, textarea { width: 100%; }
+
+  .control-group {
+    margin-bottom: 0.5rem;
+
+    .control-label {
+      margin-bottom: 0.25rem;
+    }
+
+  }
+
+  .control-group:last-of-type {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    display: block;
+  }
+}
+
+.btn {
+  border: 1px solid $primary;
+}
