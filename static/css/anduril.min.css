@@ -142,4 +142,25 @@ body {
 .primary {
   color: #9f2727; }
 
+.primary {
+  color: #9f2727; }
+
+#content.oauth.application_list #applications {
+  margin-top: 1.5rem;
+  width: 100%; }
+  #content.oauth.application_list #applications td, #content.oauth.application_list #applications th {
+    padding: 0 0.5rem; }
+  #content.oauth.application_list #applications th {
+    height: 2rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid black; }
+  #content.oauth.application_list #applications tr td {
+    height: 2.5rem; }
+  #content.oauth.application_list #applications tr ~ tr {
+    border-top: 1px solid lightgray; }
+  #content.oauth.application_list #applications tr:hover td {
+    background-color: rgba(159, 39, 39, 0.1); }
+  #content.oauth.application_list #applications .name {
+    width: 50%; }
+
 /*# sourceMappingURL=anduril.min.css.map */

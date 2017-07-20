@@ -1,6 +1,22 @@
 {% extends "home/base/base.html" %}
 
+{% block title %} Applications{% endblock %}
+
 {% block class %}oauth application_list{% endblock %}
 {% block content %}
-test
+<h1>Applications</h1>
+<table id="applications">
+    <tr>
+        <th class="name">Name</th>
+        <th class="created">Created</th>
+        <th class="edited">Edited</th>
+    </tr>
+    {% for application in applications %}
+    <tr>
+        <td><a href="{{ application.get_absolute_url }}">{{ application.name }}</a></td>
+        <td>{{ application.created }}</td>
+        <td>{{ application.updated }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}
