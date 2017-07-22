@@ -1,8 +1,16 @@
 @import "theme";
 
+#content.oauth {
+  h2 { margin-bottom: 1rem; }
+}
+
 #content.oauth.application_list {
+  h1 {
+    margin-bottom: 1.25rem;
+  }
+
   #applications {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     width: 100%;
 
     td, th { padding: 0 0.5rem; }
@@ -19,9 +27,15 @@
     }
 
     tr:hover {
-      td { background-color: mix($primary, transparent, 10%) }
+      td { /*background-color: mix($primary, transparent, 4%)*/ }
     }
 
     .name { width: 50%; }
   }
+}
+
+#content.oauth.application_detail {
+  h1 { margin-bottom: 1rem; }
+  input { width: 100%; }
+  textarea { width: 100%; min-height: 10rem; }
 }

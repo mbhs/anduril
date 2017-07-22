@@ -119,10 +119,6 @@ body {
       text-align: right; }
       #login.container-center .center .login-under button {
         margin-left: 3px; }
-    #login.container-center .center .btn-custom {
-      border-color: #9f2727;
-      color: #9f2727;
-      background-color: transparent; }
     #login.container-center .center .btn-no-padding {
       padding-left: 0;
       padding-right: 0; }
@@ -145,8 +141,13 @@ body {
 .primary {
   color: #9f2727; }
 
+#content.oauth h2 {
+  margin-bottom: 1rem; }
+
+#content.oauth.application_list h1 {
+  margin-bottom: 1.25rem; }
 #content.oauth.application_list #applications {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   width: 100%; }
   #content.oauth.application_list #applications td, #content.oauth.application_list #applications th {
     padding: 0 0.5rem; }
@@ -159,8 +160,41 @@ body {
   #content.oauth.application_list #applications tr ~ tr {
     border-top: 1px solid lightgray; }
   #content.oauth.application_list #applications tr:hover td {
-    background-color: rgba(159, 39, 39, 0.1); }
+    /*background-color: mix($primary, transparent, 4%)*/ }
   #content.oauth.application_list #applications .name {
     width: 50%; }
+
+#content.oauth.application_detail h1 {
+  margin-bottom: 1rem; }
+#content.oauth.application_detail input {
+  width: 100%; }
+#content.oauth.application_detail textarea {
+  width: 100%;
+  min-height: 10rem; }
+
+.primary {
+  color: #9f2727; }
+
+.btn-danger {
+  /* TODO: Tweak in blairstrap. */
+  background-color: #555;
+  border-color: transparent; }
+
+.btn-danger:hover {
+  background-color: #444;
+  border-color: transparent; }
+
+.control-group {
+  margin-top: 1rem; }
+
+.control-buttons {
+  padding-top: 0.5rem; }
+  .control-buttons .btn {
+    margin-right: 0.5rem; }
+
+.btn-custom {
+  border-color: #9f2727;
+  color: #9f2727;
+  background-color: transparent; }
 
 /*# sourceMappingURL=anduril.min.css.map */

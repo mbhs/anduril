@@ -1,0 +1,29 @@
+@import "theme";
+
+.btn-danger {  /* TODO: Tweak in blairstrap. */
+  background-color: #555;
+  border-color: transparent;
+}
+
+.btn-danger:hover {
+  background-color: #444;
+  border-color: transparent;
+}
+
+.control-group {
+  margin-top: 1rem;
+}
+
+.control-buttons {
+  padding-top: 0.5rem;
+  //float: right;
+  .btn {
+    margin-right: 0.5rem;
+  }
+}
+
+.btn-custom {
+  border-color: $primary;
+  color: $primary;
+  background-color: transparent;
+}

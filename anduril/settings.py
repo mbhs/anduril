@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'groups',
     'oauth2_provider',
     'corsheaders',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

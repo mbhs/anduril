@@ -1,10 +1,16 @@
 {% extends "home/base/base.html" %}
 
-{% block title %} Applications{% endblock %}
+{% block title %} Sites{% endblock %}
 
 {% block class %}oauth application_list{% endblock %}
 {% block content %}
 <h1>Applications</h1>
+<p>
+    MBHS Home provides a secure, convenient way for users to connect their accounts to other certified sites and
+    applications hosted by Montgomery Blair. This is accomplished via a protocol called OAuth2, and if you're
+    interested, you can read more about it <a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2">here</a>.
+    To connect your account to a new site, click the register button below.
+</p>
 <table id="applications">
     <tr>
         <th class="name">Name</th>
@@ -19,4 +25,7 @@
     </tr>
     {% endfor %}
 </table>
+<div class="control-group control-buttons">
+    <a class="btn btn-primary" href="{% url "oauth2_provider:register" %}">Register</a>
+</div>
 {% endblock %}

@@ -1,0 +1,34 @@
+{% extends "home/base/base.html" %}
+
+{% block title %} {{ application.name }}{% endblock %}
+
+{% block class %}oauth application_detail{% endblock %}
+{% block content %}
+<h1>Sites</h1>
+<h2>{{ application.name }}</h2>
+<div class="control-group">
+    <label for="client_id">Client ID</label>
+    <input id="client_id" type="text" class="form-control" value="{{ application.client_id }}" readonly>
+</div>
+<div class="control-group">
+    <label for="client_secret">Client secret</label>
+    <input id="client_secret" type="text" class="form-control" value="{{ application.client_secret }}" readonly>
+</div>
+<div class="control-group">
+    <label for="client_type">Client type</label>
+    <input id="client_type" type="text" class="form-control" value="{{ application.client_type }}" readonly>
+</div>
+<div class="control-group">
+    <label for="authorization_grant_type">Authorization grant type</label>
+    <input id="authorization_grant_type" type="text" class="form-control" value="{{ application.authorization_grant_type }}" readonly>
+</div>
+<div class="control-group">
+    <label for="redirect_uris">Redirect URIs</label>
+    <textarea id="redirect_uris" type="text" class="form-control" readonly>{{ application.redirect_uris }}</textarea>
+</div>
+<div class="control-group control-buttons">
+    <a class="btn btn-primary" href="{% url "oauth2_provider:list" %}">Back</a>
+    <a class="btn btn-primary" href="{% url "oauth2_provider:update" application.id %}">Edit</a>
+    <a class="btn btn-danger" href="{% url "oauth2_provider:delete" application.id %}">Delete</a>
+</div>
+{% endblock %}

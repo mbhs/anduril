@@ -1,0 +1,33 @@
+{% extends "home/base/base.html" %}
+{% load bootstrap %}
+
+{% block title %} {{ application.name }}{% endblock %}
+
+{% block class %}oauth application_detail{% endblock %}
+{% block content %}
+
+{% block info %}
+<h1>{% block app-form-title %}Edit application {{ application.name }}{% endblock %}</h1>
+{% endblock %}
+
+<form method="post" action="{% block app-form-action-url %}{% url "oauth2_provider:update" application.id %}{% endblock %}">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="control-group {% if field.errors %} error {% endif %}">
+        <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="controls">
+            {{ field|bootstrap_form_control }}
+            {% for error in field.errors %}
+            <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="control-group control-buttons">
+        <a class="btn btn-primary" href="{% block app-form-back-url %}{% url "oauth2_provider:detail" application.id %}{% endblock %}">Back</a>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+{% endblock %}
