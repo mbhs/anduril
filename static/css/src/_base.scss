@@ -110,6 +110,10 @@ body {
 
 }
 
+#dialog {
+  margin: 2rem auto;
+}
+
 @media (max-width: 575px) {
   #main #sidebar { height: auto; }
   #main #content { overflow-y: visible; }

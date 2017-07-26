@@ -11,6 +11,8 @@
     interested, you can read more about it <a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2">here</a>.
     To connect your account to a new site, click the register button below.
 </p>
+
+{% if applications %}
 <table id="applications">
     <tr>
         <th class="name">Name</th>
@@ -25,6 +27,7 @@
     </tr>
     {% endfor %}
 </table>
+{% endif %}
 <div class="control-group control-buttons">
     <a class="btn btn-primary" href="{% url "oauth2_provider:register" %}">Register</a>
 </div>

@@ -4,8 +4,7 @@
 
 {% block class %}oauth application_detail{% endblock %}
 {% block content %}
-<h1>Sites</h1>
-<h2>{{ application.name }}</h2>
+<h1>{{ application.name }}</h1>
 <div class="control-group">
     <label for="client_id">Client ID</label>
     <input id="client_id" type="text" class="form-control" value="{{ application.client_id }}" readonly>
