@@ -1,13 +1,24 @@
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from oauth2_provider.contrib.rest_framework.permissions import TokenHasReadWriteScope, TokenHasScope
-from rest_framework import permissions, viewsets
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 
 from core import models
 from . import serializers
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """Views pertaining to users."""
+class UserView(views.APIView):
+    """Get user information."""
 
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-    queryset = models.User.objects.all()
-    serializer_class = serializers.UserSerializer
+    queryset = models.User.objects
+
+    authentication_classes = (OAuth2Authentication,)
+    permission_classes = (TokenHasScope,)
+    required_scopes = ("read",)
+
+    def get(self, request, format=None):
+        """Get the user view."""
+
+        print(request.user)
+        return Response({})

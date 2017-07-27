@@ -32,21 +32,21 @@ ALLOWED_HOSTS = ["home.mbhs.edu", "localhost"]
 # Application definition
 
 INSTALLED_APPS = [
-    'polymorphic',
-    'core',
-    'home',
-    'api',
-    'groups',
-    'oauth2_provider',
-    'rest_framework',
-    'corsheaders',
-    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'oauth2_provider',
+    'rest_framework',
+    'polymorphic',
+    'crispy_forms',
+    'core',
+    'api',
+    'home',
+    'groups',
 ]
 
 MIDDLEWARE = [
@@ -163,5 +163,5 @@ REST_FRAMEWORK = {
 }
 
 OAUTH2_PROVIDER = {
-    "SCOPES": {"read": "Read scope"}
+    "SCOPES": {"read": "Read scope", "write": "Write scope"}
 }

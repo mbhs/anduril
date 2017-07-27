@@ -44,6 +44,7 @@ class UserManager(auth.UserManager):
         user = User(username=username, **extra_fields)
         profile = UserProfile.concrete[type](user=user, **profile_fields)
         profile.user_id = user.id
+        statistics = UserStatistics.objects.create(user=user)
         user.save()
         return user
 
@@ -74,19 +75,21 @@ class User(auth.User):
 
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
+def save_user(sender, instance, **kwargs):
     """Save the corresponding profile when the user is saved."""
 
     instance.profile.user_id = instance.id  # TODO: figure out why this is necessary
     instance.profile.save()
+    instance.statistics.save()
 
 
 @receiver(pre_delete, sender=User)
-def delete_user_profile(sender, instance, **kwargs):
+def delete_user(sender, instance, **kwargs):
     """Delete the user profile prior to user deletion."""
 
     try:
         instance.profile.delete()
+        instance.statistics.delete()
     except Exception as e:
         print("Failed to delete user profile:", e)
 
@@ -169,21 +172,6 @@ class UserStatistics(models.Model):
         """Represent the container as a string."""
 
         return f"<Statistics for {self.user.get_full_name()}>"
-
-
-@receiver(post_save, sender=User)
-def create_user_statistics(sender, instance, created, **kwargs):
-    """Instantiate a new statistics container every time a user is created."""
-
-    if created:
-        UserStatistics.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_statistics(sender, instance, **kwargs):
-    """Save the corresponding statistics container when the user is saved."""
-
-    instance.statistics.save()
 
 
 @receiver(user_logged_in)
