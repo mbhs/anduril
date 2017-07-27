@@ -35,8 +35,10 @@ INSTALLED_APPS = [
     'polymorphic',
     'core',
     'home',
+    'api',
     'groups',
     'oauth2_provider',
+    'rest_framework',
     'corsheaders',
     'crispy_forms',
     'django.contrib.admin',
@@ -146,3 +148,20 @@ LOGIN_URL = "/login/"
 # https://django-oauth-toolkit.readthedocs.io/en/latest/tutorial/tutorial_01.html
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# Django REST framework and OAuth2
+# http://django-oauth-toolkit.readthedocs.io/en/latest/rest-framework/getting_started.html
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+OAUTH2_PROVIDER = {
+    "SCOPES": {"read": "Read scope"}
+}

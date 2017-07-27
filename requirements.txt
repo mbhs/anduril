@@ -3,3 +3,4 @@ django-polymorphic
 django-oauth-toolkit
 django-cors-middleware
 django-crispy-forms
+djangorestframework
