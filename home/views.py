@@ -36,4 +36,5 @@ def logout(request):
 def index(request):
     """Return the example index page."""
 
+    print(request.user.profile.type)
     return render(request, "home/student/index.html")

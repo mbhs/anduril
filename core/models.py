@@ -42,9 +42,12 @@ class UserManager(auth.UserManager):
                 profile_fields[profile_field] = extra_fields.pop(field)
 
         user = User(username=username, **extra_fields)
+
+        # Must be created here to use profile data
         profile = UserProfile.concrete[type](user=user, **profile_fields)
         profile.user_id = user.id
-        statistics = UserStatistics.objects.create(user=user)
+        profile.save()
+
         user.save()
         return user
 
@@ -75,7 +78,18 @@ class User(auth.User):
 
 
 @receiver(post_save, sender=User)
-def save_user(sender, instance, **kwargs):
+def on_create_user(sender, instance, created, **kwargs):
+    """Add members to the user when it is created."""
+
+    if not created:
+        return
+
+    # User profile is created manually
+    UserStatistics.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def on_save_user(sender, instance, **kwargs):
     """Save the corresponding profile when the user is saved."""
 
     instance.profile.user_id = instance.id  # TODO: figure out why this is necessary
@@ -84,14 +98,13 @@ def save_user(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=User)
-def delete_user(sender, instance, **kwargs):
+def on_delete_user(sender, instance, **kwargs):
     """Delete the user profile prior to user deletion."""
 
-    try:
+    if instance.profile:
         instance.profile.delete()
+    if instance.statistics:
         instance.statistics.delete()
-    except Exception as e:
-        print("Failed to delete user profile:", e)
 
 
 class UserProfile(PolymorphicModel, TimeTrackingModel):
@@ -177,6 +190,9 @@ class UserStatistics(models.Model):
 @receiver(user_logged_in)
 def update_user_login_statistics(sender, user, request, **kwargs):
     """Called when a user logs into the system."""
+
+    if not hasattr(user, "statistics"):
+        return
 
     if user.statistics.login_count == 0:
         user.statistics.first_login = timezone.now()

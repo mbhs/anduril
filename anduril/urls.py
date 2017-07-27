@@ -21,8 +21,8 @@ import api.site
 
 
 urlpatterns = [
+    url(r"", include(home.site.urls, namespace="home")),
     url(r"^admin/", admin.site.urls),
     url(r"^o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
-    url(r"", include(home.site.urls, namespace="home")),
     url(r"^api/", include(api.site.urls, namespace="api")),
 ]
