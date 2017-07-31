@@ -114,30 +114,39 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
         return obj.profile.type.capitalize()
 
 
-class ClubGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.ClubGroup
+class ClubOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.ClubOrganization
 
 
-class AcademicGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.AcademicGroup
+class AdministrativeOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.AdministrativeOrganization
 
 
-class OrganizationGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.OrganizationGroup
+class AcademicOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.AcademicOrganization
+
+
+class ExternalOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.ExternalOrganization
 
 
 class GroupAdmin(polymorphic_admin.PolymorphicParentModelAdmin):
     """Superclass group profile admin interface."""
 
-    base_model = models.Group
-    child_models = (models.ClubGroup, models.AcademicGroup, models.OrganizationGroup)
+    base_model = models.Organization
+    child_models = (
+        models.ClubOrganization,
+        models.AcademicOrganization,
+        models.AdministrativeOrganization,
+        models.ExternalOrganization)
 
 
 # Register the new user and group admin
 admin.site.unregister(User)
 admin.site.register(models.User, UserAdmin)
-admin.site.register(models.ClubGroup, ClubGroupAdmin)
-admin.site.register(models.AcademicGroup, AcademicGroupAdmin)
-admin.site.register(models.OrganizationGroup, OrganizationGroupAdmin)
-admin.site.register(models.Group, GroupAdmin)
+admin.site.register(models.ClubOrganization, ClubOrganizationAdmin)
+admin.site.register(models.AcademicOrganization, AcademicOrganizationAdmin)
+admin.site.register(models.AdministrativeOrganization, AdministrativeOrganizationAdmin)
+admin.site.register(models.ExternalOrganization, ExternalOrganizationAdmin)
+admin.site.register(models.Organization, GroupAdmin)
 admin.site.register(Permission)

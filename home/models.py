@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Permission, ContentType
 
-from core.models import User, Group, TimeTrackingModel
+from core.models import User, Organization, TimeTrackingModel
 
 
 class Friendship(TimeTrackingModel):

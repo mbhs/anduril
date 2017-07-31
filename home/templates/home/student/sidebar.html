@@ -1,13 +1,15 @@
-<div class="section">Dashboard</div>
+<a class="item">Dashboard</a>
 <a class="item">News</a>
 <a class="item">Courses</a>
 <a class="item">Friends</a>
 <div class="section">Groups</div>
-<a class="item">Add groups...</a>
-<div class="section">Apps</div>
-<a class="item" href="{% url "oauth2_provider:list" %}">My Apps</a>
-<a class="item" href="{% url "oauth2_provider:register" %}">Register</a>
+{% if user.groups %}
+
+{% else %}
+    <a class="item">Add groups...</a>
+{% endif %}
 <div class="section">Account</div>
 <a class="item">Profile</a>
+<a class="item" href="{% url "oauth2_provider:list" %}">Applications &#x2713;</a>
 <a class="item">Settings</a>
-<a class="item" href="{% url "home:logout" %}">Logout</a>
+<a class="item" href="{% url "home:logout" %}">Logout &#x2713;</a>

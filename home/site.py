@@ -8,7 +8,9 @@ urls = [
     url("^logout/$", views.logout, name="logout"),
 
     # Shared pages
-    url("^$", views.index, name="index"),
-    url("^news/$", views.index, name="news"),
-    url("^courses/$", views.courses, name="courses")
+    url("^$", views.IndexView.as_view(), name="index"),
+    url("^news/$", views.IndexView.as_view(), name="news"),
+    url("^courses/$", views.IndexView.as_view(), name="courses"),
+    url("^account/$", views.IndexView.as_view(), name="account"),
+
 ]

@@ -5,6 +5,7 @@ from django.views.generic import View
 
 from core import models
 from lib.utils import profile_type
+from lib.views import ProfileBasedViewDispatcher
 
 from . import student
 
@@ -50,13 +51,7 @@ def logout(request):
     return redirect("home:login")
 
 
-@login_required
-def index(request, *args, **kwargs):
-    """Return the example index page."""
+class IndexView(ProfileBasedViewDispatcher):
+    """View the index page."""
 
-    if request.user.profile:
-        if request.user.profile.type == models.UserProfile.STUDENT:
-            return student.index(request, *args, **kwargs)
-
-
-
+    lookup = {models.UserProfile.STUDENT: student.index}

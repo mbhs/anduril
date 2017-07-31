@@ -63,6 +63,10 @@ body {
 
     padding-bottom: 1em;
 
+    a:first-child {
+      margin-top: 0.75em;
+    }
+
     .item, .section {
       padding: 0.25em 1em;
       text-decoration: none;

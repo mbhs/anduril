@@ -140,11 +140,6 @@ class UserProfile(PolymorphicModel, TimeTrackingModel):
     display_first_name = models.CharField(blank=True, null=True, max_length=60)
     display_last_name = models.CharField(blank=True, null=True, max_length=60)
 
-    # Meta
-    class Meta:
-        verbose_name = _('user profile')
-        verbose_name_plural = _('user profiles')
-
     @property
     def slug(self):
         """Get the URL slug of the model."""
@@ -177,7 +172,7 @@ class UserStatistics(models.Model):
     including login counts, first join date, etc.
     """
 
-    user = models.OneToOneField(User, verbose_name=_("statistics"), related_name="statistics")
+    user = models.OneToOneField(User, related_name="statistics")
     first_login = models.DateTimeField(blank=True, null=True)
     login_count = models.IntegerField(default=0)
 
@@ -204,34 +199,19 @@ def update_user_login_statistics(sender, user, request, **kwargs):
 class StudentUserProfile(UserProfile):
     """Student subclass of the user profile."""
 
-    student_id = models.CharField(_("student id"), max_length=8, unique=True)
-    graduation_year = models.IntegerField(_("graduation year"), blank=True, null=True)
-    counselor = models.ForeignKey(User, verbose_name=_("counselor"), blank=True, null=True)
-
-    # Meta
-    class Meta:
-        verbose_name = _('student profile')
-        verbose_name_plural = _('student profiles')
+    student_id = models.CharField(max_length=8, unique=True)
+    graduation_year = models.IntegerField(blank=True, null=True)
+    counselor = models.ForeignKey(User, blank=True, null=True)
 
 
 @UserProfile.register(UserProfile.TEACHER)
 class TeacherUserProfile(UserProfile):
     """Teacher subclass of the user profile."""
 
-    # Meta
-    class Meta:
-        verbose_name = _('teacher profile')
-        verbose_name_plural = _('teacher profiles')
-
 
 @UserProfile.register(UserProfile.COUNSELOR)
 class CounselorUserProfile(UserProfile):
     """Counselor subclass of the user profile."""
-
-    # Meta
-    class Meta:
-        verbose_name = _('counselor profile')
-        verbose_name_plural = _('counselor profiles')
 
 
 @UserProfile.register(UserProfile.STAFF)
@@ -240,33 +220,23 @@ class StaffUserProfile(UserProfile):
 
     title = models.CharField(_("title"), max_length=30)
 
-    # Meta
-    class Meta:
-        verbose_name = _('staff profile')
-        verbose_name_plural = _('staff profiles')
-
 
 @UserProfile.register(UserProfile.ALUMNUS)
 class AlumnusUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    graduation_year = models.IntegerField(_("graduation year"), blank=True, null=True)
-
-    # Meta
-    class Meta:
-        verbose_name = _('alumnus profile')
-        verbose_name_plural = _('alumnus profiles')
+    graduation_year = models.IntegerField(blank=True, null=True)
 
 
-class GroupMembership(TimeTrackingModel):
+class OrganizationMembership(TimeTrackingModel):
     """Represents group membership with added functionality."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey("Group", on_delete=models.CASCADE)
+    group = models.ForeignKey("core.Organization", on_delete=models.CASCADE)
     roles = models.CharField(max_length=30)
 
 
-class Group(PolymorphicModel, TimeTrackingModel):
+class Organization(PolymorphicModel, TimeTrackingModel):
     """Group base class.
     
     While the user model proxies the existing django user class in
@@ -280,7 +250,8 @@ class Group(PolymorphicModel, TimeTrackingModel):
     ABSTRACT = None
     CLUB = "club"
     ACADEMIC = "academic"
-    ORGANIZATION = "organization"
+    ADMINISTRATIVE = "administrative"
+    EXTERNAL = "external"
     concrete = {}
 
     @staticmethod
@@ -288,26 +259,24 @@ class Group(PolymorphicModel, TimeTrackingModel):
         """Register a group type to an enumeration."""
 
         def _register(cls):
-            Group.concrete[group] = cls
+            Organization.concrete[group] = cls
             cls.type = group
             return cls
         return _register
 
     # Actual group fields
-    name = models.CharField(_("name"), max_length=80, unique=True)
-    users = models.ManyToManyField(User, verbose_name=_("users"), through=GroupMembership)
-    title = models.CharField(_("title"), max_length=80)
-    description = models.TextField(_("description"))
+    name = models.CharField(max_length=80, unique=True)
+    users = models.ManyToManyField(User, through=OrganizationMembership, related_name="organizations")
+    title = models.CharField(max_length=80)
+    description = models.TextField()
 
     # Whether the group is hidden
-    hidden = models.BooleanField(_("hidden"))
+    hidden = models.BooleanField()
 
     type = ABSTRACT
 
     # Meta
     class Meta:
-        verbose_name = _('group')
-        verbose_name_plural = _('groups')
         permissions = (
             ("can_manage_groups", "Can manage groups"),)
 
@@ -328,18 +297,23 @@ class Group(PolymorphicModel, TimeTrackingModel):
         return f"/groups/{self.id}"
 
 
-@Group.register(Group.CLUB)
-class ClubGroup(Group):
+@Organization.register(Organization.CLUB)
+class ClubOrganization(Organization):
     """Type of group used for extracurricular clubs."""
 
     sponsor = models.ManyToManyField(User)
 
 
-@Group.register(Group.ACADEMIC)
-class AcademicGroup(Group):
+@Organization.register(Organization.ACADEMIC)
+class AcademicOrganization(Organization):
     """Academic organization profile."""
 
 
-@Group.register(Group.ORGANIZATION)
-class OrganizationGroup(Group):
+@Organization.register(Organization.ADMINISTRATIVE)
+class AdministrativeOrganization(Organization):
+    """Administrative organization."""
+
+
+@Organization.register(Organization.EXTERNAL)
+class ExternalOrganization(Organization):
     """Generic organization profile."""
