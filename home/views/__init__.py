@@ -34,7 +34,7 @@ class LoginView(View):
             response["Location"] += "?error=1"
             return response
 
-        if not user.is_staff or not user.has_perm("can_login"):
+        if not user.is_staff and not user.has_perm("home.can_login"):
             response = redirect("home:login")
             response["Location"] += "?error=2"
             return response

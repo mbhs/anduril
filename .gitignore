@@ -5,3 +5,4 @@ __pycache__/
 venv/
 .sass-cache/
 .DS_Store
+env/
