@@ -284,20 +284,23 @@ class Group(PolymorphicModel, TimeTrackingModel):
     concrete = {}
 
     @staticmethod
-    def register(type):
-        """Register a profile class to a group enumeration."""
+    def register(group):
+        """Register a group type to an enumeration."""
 
         def _register(cls):
-            Group.concrete[type] = cls
-            cls.type = type
+            Group.concrete[group] = cls
+            cls.type = group
             return cls
         return _register
 
     # Actual group fields
     name = models.CharField(_("name"), max_length=80, unique=True)
     users = models.ManyToManyField(User, verbose_name=_("users"), through=GroupMembership)
-    title = models.CharField(max_length=80)
-    description = models.TextField()
+    title = models.CharField(_("title"), max_length=80)
+    description = models.TextField(_("description"))
+
+    # Whether the group is hidden
+    hidden = models.BooleanField(_("hidden"))
 
     type = ABSTRACT
 
