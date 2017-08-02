@@ -10,7 +10,6 @@ from django.contrib.auth import models as auth
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 
@@ -218,7 +217,7 @@ class CounselorUserProfile(UserProfile):
 class StaffUserProfile(UserProfile):
     """Staff subclass of the user profile."""
 
-    title = models.CharField(_("title"), max_length=30)
+    title = models.CharField(max_length=30)
 
 
 @UserProfile.register(UserProfile.ALUMNUS)
