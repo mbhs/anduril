@@ -8,4 +8,5 @@ class GroupFrom(ModelForm):
 
     class Meta:
         model = models.Group
-        
+
+    # TODO: implement two part form, first page group type, then individual forms
