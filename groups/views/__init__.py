@@ -6,7 +6,13 @@ from core import models
 from . import student
 
 
-class GroupView(LoginRequiredMixin, ProfileBasedViewDispatcher):
+class List(LoginRequiredMixin, ProfileBasedViewDispatcher):
     """View groups to join or manage."""
 
-    lookup = {models.UserProfile.STUDENT: student.GroupView.as_view()}
+    lookup = {models.UserProfile.STUDENT: student.List.as_view()}
+
+
+class Create(LoginRequiredMixin, ProfileBasedViewDispatcher):
+    """Submit a group creation form."""
+
+    lookup = {models.UserProfile.STUDENT: student.Create.as_view()}

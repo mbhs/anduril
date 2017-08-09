@@ -3,5 +3,6 @@ from . import views
 
 
 urls = [
-    url("^$", views.GroupView.as_view(), name="index"),
+    url("^list/$", views.List.as_view(), name="index"),
+    url("^create/$", views.Create.as_view(), name="index"),
 ]
