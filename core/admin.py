@@ -114,39 +114,39 @@ class UserAdmin(polymorphic_admin.PolymorphicInlineSupportMixin, auth_admin.User
         return obj.profile.type.capitalize()
 
 
-class ClubOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.ClubOrganization
+class ClubGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.ClubGroup
 
 
-class AdministrativeOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.AdministrativeOrganization
+class AdministrativeGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.AdministrativeGroup
 
 
-class AcademicOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.AcademicOrganization
+class AcademicGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.AcademicGroup
 
 
-class ExternalOrganizationAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
-    base_model = models.ExternalOrganization
+class ExternalGroupAdmin(polymorphic_admin.PolymorphicChildModelAdmin):
+    base_model = models.ExternalGroup
 
 
 class GroupAdmin(polymorphic_admin.PolymorphicParentModelAdmin):
     """Superclass group profile admin interface."""
 
-    base_model = models.Organization
+    base_model = models.Group
     child_models = (
-        models.ClubOrganization,
-        models.AcademicOrganization,
-        models.AdministrativeOrganization,
-        models.ExternalOrganization)
+        models.ClubGroup,
+        models.AcademicGroup,
+        models.AdministrativeGroup,
+        models.ExternalGroup)
 
 
 # Register the new user and group admin
 admin.site.unregister(User)
 admin.site.register(models.User, UserAdmin)
-admin.site.register(models.ClubOrganization, ClubOrganizationAdmin)
-admin.site.register(models.AcademicOrganization, AcademicOrganizationAdmin)
-admin.site.register(models.AdministrativeOrganization, AdministrativeOrganizationAdmin)
-admin.site.register(models.ExternalOrganization, ExternalOrganizationAdmin)
-admin.site.register(models.Organization, GroupAdmin)
+admin.site.register(models.ClubGroup, ClubGroupAdmin)
+admin.site.register(models.AcademicGroup, AcademicGroupAdmin)
+admin.site.register(models.AdministrativeGroup, AdministrativeGroupAdmin)
+admin.site.register(models.ExternalGroup, ExternalGroupAdmin)
+admin.site.register(models.Group, GroupAdmin)
 admin.site.register(Permission)

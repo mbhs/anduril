@@ -3,10 +3,10 @@
 <a class="item">Courses</a>
 <a class="item">Friends</a>
 <div class="section">Groups</div>
-{% if user.groups %}
+{% if user.groups.length > 0 %}
 
 {% else %}
-    <a class="item">Add groups...</a>
+    <a class="item" href="{% url "groups:index" %}">Add...</a>
 {% endif %}
 <div class="section">Account</div>
 <a class="item">Profile</a>

@@ -1,12 +1,11 @@
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import View
 
-from core import models
-from lib.utils import profile_type
 from lib.views import ProfileBasedViewDispatcher
 
+from core import models
 from . import student
 
 
@@ -51,7 +50,7 @@ def logout(request):
     return redirect("home:login")
 
 
-class IndexView(ProfileBasedViewDispatcher):
+class IndexView(LoginRequiredMixin, ProfileBasedViewDispatcher):
     """View the index page."""
 
     lookup = {models.UserProfile.STUDENT: student.index}

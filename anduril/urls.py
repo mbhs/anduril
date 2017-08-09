@@ -18,10 +18,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 import home.site
 import api.site
+import groups.site
 
 
 urlpatterns = [
     url(r"", include(home.site.urls, namespace="home")),
+    url(r"^groups/", include(groups.site.urls, namespace="groups")),
     url(r"^admin/", admin.site.urls),
     url(r"^o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     url(r"^api/", include(api.site.urls, namespace="api")),

@@ -227,15 +227,15 @@ class AlumnusUserProfile(UserProfile):
     graduation_year = models.IntegerField(blank=True, null=True)
 
 
-class OrganizationMembership(TimeTrackingModel):
+class GroupMembership(TimeTrackingModel):
     """Represents group membership with added functionality."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey("core.Organization", on_delete=models.CASCADE)
+    group = models.ForeignKey("core.Group", on_delete=models.CASCADE)
     roles = models.CharField(max_length=30)
 
 
-class Organization(PolymorphicModel, TimeTrackingModel):
+class Group(PolymorphicModel, TimeTrackingModel):
     """Group base class.
     
     While the user model proxies the existing django user class in
@@ -258,14 +258,14 @@ class Organization(PolymorphicModel, TimeTrackingModel):
         """Register a group type to an enumeration."""
 
         def _register(cls):
-            Organization.concrete[group] = cls
+            Group.concrete[group] = cls
             cls.type = group
             return cls
         return _register
 
     # Actual group fields
     name = models.CharField(max_length=80, unique=True)
-    users = models.ManyToManyField(User, through=OrganizationMembership, related_name="organizations")
+    users = models.ManyToManyField(User, through=GroupMembership, related_name="organizations")
     title = models.CharField(max_length=80)
     description = models.TextField()
 
@@ -296,23 +296,23 @@ class Organization(PolymorphicModel, TimeTrackingModel):
         return f"/groups/{self.id}"
 
 
-@Organization.register(Organization.CLUB)
-class ClubOrganization(Organization):
+@Group.register(Group.CLUB)
+class ClubGroup(Group):
     """Type of group used for extracurricular clubs."""
 
     sponsor = models.ManyToManyField(User)
 
 
-@Organization.register(Organization.ACADEMIC)
-class AcademicOrganization(Organization):
+@Group.register(Group.ACADEMIC)
+class AcademicGroup(Group):
     """Academic organization profile."""
 
 
-@Organization.register(Organization.ADMINISTRATIVE)
-class AdministrativeOrganization(Organization):
+@Group.register(Group.ADMINISTRATIVE)
+class AdministrativeGroup(Group):
     """Administrative organization."""
 
 
-@Organization.register(Organization.EXTERNAL)
-class ExternalOrganization(Organization):
+@Group.register(Group.EXTERNAL)
+class ExternalGroup(Group):
     """Generic organization profile."""

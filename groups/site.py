@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views
 
+
 urls = [
-    url("^$", views.index, name="groups:index"),
+    url("^$", views.GroupView.as_view(), name="index"),
 ]
