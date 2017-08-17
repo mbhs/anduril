@@ -5,6 +5,8 @@
 {% block content %}
 
 <h1>Groups</h1>
+<p>Groups provide a platform for communities, clubs, and organizations within Blair to coordinate and post information.
+To submit a group creation request, visit <a href="{% url "groups:create" %}">this</a> page.</p>
 
 <table>
 {% for group in groups %}

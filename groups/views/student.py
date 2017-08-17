@@ -1,7 +1,15 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, FormView
 
 from core import models
+
+
+@login_required
+def index(request):
+    """View the index groups page."""
+
+    return render(request, "groups/student/index.html", {"groups": request.user.groups.all()})
 
 
 class List(ListView):
@@ -11,9 +19,3 @@ class List(ListView):
     template_name = "groups/student/list.html"
     context_object_name = "groups"
     paginate_by = 25
-
-
-class Create(FormView):
-    """Create a new group."""
-
-

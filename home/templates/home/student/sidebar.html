@@ -2,11 +2,12 @@
 <a class="item">News</a>
 <a class="item">Courses</a>
 <a class="item">Friends</a>
+<a class="item" href="{% url "groups:index" %}">Groups</a>
 <div class="section">Groups</div>
 {% if user.groups.length > 0 %}
 
 {% else %}
-    <a class="item" href="{% url "groups:index" %}">Add...</a>
+    <a class="item" href="{% url "groups:list" %}">Add...</a>
 {% endif %}
 <div class="section">Account</div>
 <a class="item">Profile</a>

@@ -3,6 +3,7 @@ from . import views
 
 
 urls = [
-    url("^list/$", views.List.as_view(), name="index"),
-    url("^create/$", views.Create.as_view(), name="index"),
+    url("^$", views.Index.as_view(), name="index"),
+    url("^list/$", views.List.as_view(), name="list"),
+    url("^create/(?P<typeof>\w+)?$", views.Create.as_view(), name="create"),
 ]
