@@ -14,10 +14,14 @@ Club groups require a teacher or staff sponsor and must be approved by the club 
 
 <h2>Academic</h2>
 <p>Academic groups are largely reserved for teachers, staff, and administrators at Blair. They provide a means of
-communication with student, and can serve as a platform for organizing school events.<br>
-<a href={% url "groups:create" typeof="academic" %}>Create &rightarrow;</a></p>
+communication with student, and can serve as a platform for organizing school events. It is not possible to submit a
+request for this type of group.<br>
+<a href="{% url "groups:create" typeof="academic" %}">Create &rightarrow;</a></p>
 
 <h2>Administrative</h2>
+<p>Administrative groups are for management roles and organizations such as the sysops. It is not possible to submit a
+request for this type of group.<br>
+<a href="{% url "groups:create" typeof="administrative" %}">Create &rightarrow;</a></p>
 
 <h2>External</h2>
 
