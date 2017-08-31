@@ -1,22 +1,28 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Permission
 
+import getpass
+
 from core.models import User, UserProfile
 
 
 class Command(BaseCommand):
-    """The command to create the development users."""
+    """Conveniently create users for development."""
 
     def handle(self, *args, **kwargs):
         """Run from shell."""
 
-        User.objects.filter(username="nokim").delete()
+        username = input("username: ")
+        student_id = int(input("student id: "))
+        password = getpass.getpass("password: ")
+
+        User.objects.filter(username=username).delete()
 
         u = User.objects.create_user(
-            username="nokim",
+            username=username,
             type=UserProfile.STUDENT,
-            profile__student_id=12345678)
-        u.set_password("asdf")
+            profile__student_id=student_id)
+        u.set_password(password)
         u.user_permissions.add(Permission.objects.get(codename="can_login"))
         u.is_staff = True
         u.is_superuser = True
