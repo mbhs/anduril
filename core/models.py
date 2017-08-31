@@ -9,6 +9,7 @@ from polymorphic.models import PolymorphicModel
 from django.contrib.auth import models as auth
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save, pre_delete
+from django.db.models.fields import related_descriptors
 from django.dispatch import receiver
 from django.utils import timezone
 
@@ -33,10 +34,10 @@ class UserManager(auth.UserManager):
                 profile_fields[profile_field] = extra_fields.pop(field)
 
         user = User(username=username, **extra_fields)
+        user.save()
 
         # Must be created here to use profile data
         profile = UserProfile.concrete[type](user=user, **profile_fields)
-        profile.user_id = user.id
         profile.save()
 
         user.save()
@@ -83,19 +84,30 @@ def on_create_user(sender, instance, created, **kwargs):
 def on_save_user(sender, instance, **kwargs):
     """Save the corresponding profile when the user is saved."""
 
-    instance.profile.user_id = instance.id  # TODO: figure out why this is necessary
-    instance.profile.save()
-    instance.statistics.save()
+    try:
+        instance.profile.save()
+    except UserProfile.DoesNotExist:
+        pass
+
+    try:
+        instance.statistics.save()
+    except UserStatistics.DoesNotExist:
+        pass
 
 
 @receiver(pre_delete, sender=User)
 def on_delete_user(sender, instance, **kwargs):
     """Delete the user profile prior to user deletion."""
 
-    if instance.profile:
+    try:
         instance.profile.delete()
-    if instance.statistics:
+    except UserProfile.DoesNotExist:
+        pass
+
+    try:
         instance.statistics.delete()
+    except UserStatistics.DoesNotExist:
+        pass
 
 
 class UserProfile(PolymorphicModel, TimeTrackingModel):
@@ -122,6 +134,13 @@ class UserProfile(PolymorphicModel, TimeTrackingModel):
             cls.type = type
             return cls
         return _register
+
+    def __init__(self, *args, **kwargs):
+        """Initialize a user profile."""
+
+        if "user" in kwargs:
+            kwargs["user_id"] = kwargs["user"].id
+        super().__init__(*args, **kwargs)
 
     # Actual profile fields
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
@@ -177,13 +196,13 @@ class UserStatistics(models.Model):
 def update_user_login_statistics(sender, user, request, **kwargs):
     """Called when a user logs into the system."""
 
-    if not hasattr(user, "statistics"):
-        return
-
-    if user.statistics.login_count == 0:
-        user.statistics.first_login = timezone.now()
-    user.statistics.login_count += 1
-    user.statistics.save()
+    try:
+        if user.statistics.login_count == 0:
+            user.statistics.first_login = timezone.now()
+        user.statistics.login_count += 1
+        user.statistics.save()
+    except UserStatistics.DoesNotExist:
+        pass
 
 
 @UserProfile.register(UserProfile.STUDENT)
