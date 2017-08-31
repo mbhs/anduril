@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, FormView
 
-from core import models
+from groups import models
 
 
 @login_required
