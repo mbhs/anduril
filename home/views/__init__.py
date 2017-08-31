@@ -54,3 +54,9 @@ class IndexView(LoginRequiredMixin, ProfileBasedViewDispatcher):
     """View the index page."""
 
     lookup = {models.UserProfile.STUDENT: student.index}
+
+
+class ProfileView(LoginRequiredMixin, ProfileBasedViewDispatcher):
+    """View the user profile page."""
+
+    lookup = {models.UserProfile.STUDENT: student.profile}
