@@ -16,6 +16,6 @@ class List(ListView):
     """View the list of available groups."""
 
     model = models.Group
-    template_name = "groups/student/list.html"
+    template_name = "groups/student/../templates/groups/list.html"
     context_object_name = "groups"
     paginate_by = 25

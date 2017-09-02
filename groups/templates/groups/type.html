@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+
+{% block title %}Create a Group{% endblock %}
+
+{% block content %}
+<h1>Create a group</h1>
+<p>Before creating a group, consider what kind of group it should be represented as. The list of available group types
+and their respective descriptions are displayed below.</p>
+
+{% for group in groups %}
+<h2>{{ group.type|capfirst }}</h2>
+<p>{{ group.about }}<br>
+<a href={% url "groups:create" typeof=group.type %}>Create &rightarrow;</a></p>
+
+{% endfor %}
+
+{% endblock %}

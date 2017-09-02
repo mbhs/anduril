@@ -12,9 +12,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         """Run from shell."""
 
-        username = input("username: ")
-        student_id = int(input("student id: "))
-        password = getpass.getpass("password: ")
+        username = input("Username: ")
+        student_id = int(input("Student ID: "))
+        password = getpass.getpass("Password: ")
 
         User.objects.filter(username=username).delete()
 

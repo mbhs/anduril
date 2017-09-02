@@ -1,12 +1,11 @@
 from django.forms import ModelForm
 
-from core import models
+from . import models
 
 
-class GroupFrom(ModelForm):
+class ClubGroupRequestFrom(ModelForm):
     """Student request for group creation."""
 
     class Meta:
-        model = models.Group
-
-    # TODO: implement two part form, first page group type, then individual forms
+        model = models.ClubGroup
+        #fields = []

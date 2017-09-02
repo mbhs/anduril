@@ -55,7 +55,8 @@ class Group(PolymorphicModel, TimeTrackingModel):
     # Meta
     class Meta:
         permissions = (
-            ("can_manage_groups", "Can manage groups"),)
+            ("can_manage_groups", "Can manage groups"),
+            ("can_request_group", "Can submit group application"),)
 
     def __repr__(self):
         """Represent the group as a string."""
@@ -76,21 +77,35 @@ class Group(PolymorphicModel, TimeTrackingModel):
 
 @Group.register(Group.CLUB)
 class ClubGroup(Group):
-    """Type of group used for extracurricular clubs."""
+    """Group for clubs at Blair."""
+
+    about = """Club groups are for organized extracurricular 
+    activities hosted at Blair, and include sports, academic, and 
+    hobby groups. Club groups require a teacher or staff sponsor and
+    must be approved by the club administrator at Blair."""
 
     sponsor = models.ManyToManyField(User)
 
 
 @Group.register(Group.ACADEMIC)
 class AcademicGroup(Group):
-    """Academic organization profile."""
+    """Group for teachers and staff to communicate with students."""
+
+    about = """Academic groups are largely reserved for teachers, 
+    staff, and administrators at Blair. They provide a means of 
+    communication with students, and can serve as a platform for 
+    organizing school events."""
 
 
 @Group.register(Group.ADMINISTRATIVE)
 class AdministrativeGroup(Group):
     """Administrative organization."""
 
+    about = """Blah blah blah."""
+
 
 @Group.register(Group.EXTERNAL)
 class ExternalGroup(Group):
     """Generic organization profile."""
+
+    about = """Blah blah blah blah."""

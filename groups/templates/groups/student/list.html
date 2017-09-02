@@ -6,10 +6,14 @@
 
 <h1>Groups</h1>
 
+{% if groups %}
 <table>
-{% for group in groups %}
+    {% for group in groups %}
     <tr><td>group.name</td></tr>
-{% endfor %}
+    {% endfor %}
 </table>
+{% else %}
+<p>No groups have been created yet. Create one <a href="{% url "groups:create" %}">here</a>.</p>
+{% endif %}
 
 {% endblock %}

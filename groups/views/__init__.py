@@ -5,20 +5,23 @@ from django.http import Http404
 
 from lib.views import ProfileBasedViewDispatcher
 
-from core import models
+from core.models import UserProfile
+from groups.models import Group
 from . import student
+
+from lib import permissions
 
 
 class Index(LoginRequiredMixin, ProfileBasedViewDispatcher):
     """View the group index page."""
 
-    lookup = {models.UserProfile.STUDENT: student.index}
+    lookup = {UserProfile.STUDENT: student.index}
 
 
 class List(LoginRequiredMixin, ProfileBasedViewDispatcher):
     """View groups to join or manage."""
 
-    lookup = {models.UserProfile.STUDENT: student.List.as_view()}
+    lookup = {UserProfile.STUDENT: student.List.as_view()}
 
 
 class Create(LoginRequiredMixin, View):
@@ -28,6 +31,10 @@ class Create(LoginRequiredMixin, View):
         """Get the form."""
 
         if typeof is None:
-            return render(request, "groups/student/type.html")
-        if typeof not in models.Group.concrete:
+            allowed = permissions.allowed_groups(request.user)
+            return render(request, "groups/type.html", {"groups": allowed})
+        if typeof not in Group.concrete:
             raise Http404
+
+        if typeof == Group.CLUB:
+            pass
