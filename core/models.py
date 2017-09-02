@@ -17,10 +17,10 @@ from lib.models import TimeTrackingModel
 
 
 class UserManager(auth.UserManager):
-    """User manager that modifies creation for polymorphic profiles.
+    """User manager that modifies create for polymorphic profiles.
     
     A separate user manager is necessary to override User object
-    creation. Since we want to avoid any situations where a user 
+    create. Since we want to avoid any situations where a user
     object doesn't have a profile, we require it as a parameter.
     """
 
@@ -45,7 +45,7 @@ class UserManager(auth.UserManager):
 
 
 class User(auth.User):
-    """User proxy that overrides user creation."""
+    """User proxy that overrides user create."""
 
     objects = UserManager()
 
@@ -93,22 +93,7 @@ def on_save_user(sender, instance, **kwargs):
         instance.statistics.save()
     except UserStatistics.DoesNotExist:
         pass
-
-
-@receiver(pre_delete, sender=User)
-def on_delete_user(sender, instance, **kwargs):
-    """Delete the user profile prior to user deletion."""
-
-    try:
-        instance.profile.delete()
-    except UserProfile.DoesNotExist:
-        pass
-
-    try:
-        instance.statistics.delete()
-    except UserStatistics.DoesNotExist:
-        pass
-
+    
 
 class UserProfile(PolymorphicModel, TimeTrackingModel):
     """Base user profile model."""
@@ -182,7 +167,7 @@ class UserStatistics(models.Model):
     including login counts, first join date, etc.
     """
 
-    user = models.OneToOneField(User, related_name="statistics")
+    user = models.OneToOneField(User, related_name="statistics", on_delete=models.CASCADE)
     first_login = models.DateTimeField(blank=True, null=True)
     login_count = models.IntegerField(default=0)
 
