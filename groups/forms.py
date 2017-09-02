@@ -4,8 +4,12 @@ from . import models
 
 
 class ClubGroupRequestFrom(ModelForm):
-    """Student request for group creation."""
+    """Student request for group create."""
 
     class Meta:
-        model = models.ClubGroup
-        #fields = []
+        model = models.ClubGroupRequest
+        fields = ["sponsors"]
+
+
+requests = {models.Group.CLUB: ClubGroupRequestFrom}
+create = {}

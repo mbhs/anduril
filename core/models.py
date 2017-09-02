@@ -93,7 +93,7 @@ def on_save_user(sender, instance, **kwargs):
         instance.statistics.save()
     except UserStatistics.DoesNotExist:
         pass
-    
+
 
 class UserProfile(PolymorphicModel, TimeTrackingModel):
     """Base user profile model."""

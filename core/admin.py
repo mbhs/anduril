@@ -68,7 +68,7 @@ class OptionalUnicodeUsernameValidator(auth_validators.UnicodeUsernameValidator)
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
-    """Add fields to user creation to support profile type."""
+    """Add fields to user create to support profile type."""
 
     username = auth_forms.UsernameField(
         required=False,

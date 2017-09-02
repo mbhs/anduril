@@ -55,8 +55,8 @@ class Group(PolymorphicModel, TimeTrackingModel):
     # Meta
     class Meta:
         permissions = (
-            ("can_manage_groups", "Can manage groups"),
-            ("can_request_group", "Can submit group application"),)
+            ("manage_groups", "Can manage groups"),
+            ("request_group", "Can submit group application"),)
 
     def __repr__(self):
         """Represent the group as a string."""
@@ -84,7 +84,24 @@ class ClubGroup(Group):
     hobby groups. Club groups require a teacher or staff sponsor and
     must be approved by the club administrator at Blair."""
 
-    sponsor = models.ManyToManyField(User)
+    sponsors = models.ManyToManyField(User)
+
+
+class ClubGroupRequest(models.Model):
+    """Student request to create a club group."""
+
+    model = ClubGroup
+
+    user = models.ForeignKey(User, related_name="+")
+    sponsors = models.ManyToManyField(User, through="groups.ClubGroupRequestSponsorship", related_name="+")
+
+
+class ClubGroupRequestSponsorship(models.Model):
+    """Many to many connector to allow sponsors to verify sponsorship."""
+
+    request = models.ForeignKey(ClubGroupRequest, on_delete=models.CASCADE)
+    sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
+    verified = models.BooleanField(default=False)
 
 
 @Group.register(Group.ACADEMIC)

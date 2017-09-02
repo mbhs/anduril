@@ -7,6 +7,8 @@ from lib.views import ProfileBasedViewDispatcher
 
 from core.models import UserProfile
 from groups.models import Group
+from groups import forms
+
 from . import student
 
 from lib import permissions
@@ -30,11 +32,14 @@ class Create(LoginRequiredMixin, View):
     def get(self, request, *args, typeof=None, **kwargs):
         """Get the form."""
 
+        allowed = permissions.allowed_groups(request.user)
         if typeof is None:
-            allowed = permissions.allowed_groups(request.user)
-            return render(request, "groups/type.html", {"groups": allowed})
+            return render(request, "groups/create/type.html", {"groups": map(Group.concrete.__getitem__, allowed)})
         if typeof not in Group.concrete:
             raise Http404
 
-        if typeof == Group.CLUB:
-            pass
+        if typeof not in allowed:
+            return render(request, "groups/create/unauthorized.html", {"type": typeof})
+
+        if request.user.has_perm("create_group"):
+            return render(request, "groups/create/create.html", {"form": forms.create[typeof]})
