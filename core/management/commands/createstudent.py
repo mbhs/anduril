@@ -13,6 +13,8 @@ class Command(BaseCommand):
         """Run from shell."""
 
         username = input("Username: ")
+        first_name = input("First name: ")
+        last_name = input("Last name: ")
         student_id = int(input("Student ID: "))
         password = getpass.getpass("Password: ")
 
@@ -20,6 +22,8 @@ class Command(BaseCommand):
 
         u = User.objects.create_user(
             username=username,
+            first_name=first_name,
+            last_name=last_name,
             type=UserProfile.STUDENT,
             profile__student_id=student_id)
         u.set_password(password)

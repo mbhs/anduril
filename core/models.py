@@ -8,7 +8,7 @@ from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.contrib.auth import models as auth
 from django.contrib.auth.signals import user_logged_in
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save
 from django.db.models.fields import related_descriptors
 from django.dispatch import receiver
 from django.utils import timezone
@@ -73,26 +73,12 @@ class User(auth.User):
 def on_create_user(sender, instance, created, **kwargs):
     """Add members to the user when it is created."""
 
-    if not created:
+    if created:
+        UserStatistics.objects.create(user=instance)
         return
 
-    # User profile is created manually
-    UserStatistics.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def on_save_user(sender, instance, **kwargs):
-    """Save the corresponding profile when the user is saved."""
-
-    try:
-        instance.profile.save()
-    except UserProfile.DoesNotExist:
-        pass
-
-    try:
-        instance.statistics.save()
-    except UserStatistics.DoesNotExist:
-        pass
+    instance.profile.save()
+    instance.statistics.save()
 
 
 class UserProfile(PolymorphicModel, TimeTrackingModel):
