@@ -1,8 +1,13 @@
 .idea/
-*.sqlite3
-migrations/
-__pycache__/
-venv/
 .sass-cache/
 .DS_Store
+
+*.sqlite3
+
+__pycache__/
+
+migrations/
+venv/
 env/
+
+/anduril/settings/secret.py
