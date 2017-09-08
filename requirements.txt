@@ -5,3 +5,5 @@ django-cors-middleware
 django-crispy-forms
 djangorestframework
 pyyaml
+psycopg2
+gunicorn
