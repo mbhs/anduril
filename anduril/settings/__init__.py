@@ -25,7 +25,7 @@ SECRET_KEY = 'b$(03!3otd#7c!2*gn2cvu#2_!)(i!xxw8-o0_u^4vlv^k#5)j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["home.mbhs.edu", "localhost"]
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
