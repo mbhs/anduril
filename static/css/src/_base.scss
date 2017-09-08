@@ -84,8 +84,12 @@ body {
     }
 
     .item:hover {
-      color: inherit;
+      color: #ccc;
       background-color: #666;
+    }
+
+    .item.disabled:hover {
+      background-color: inherit;
     }
 
   }

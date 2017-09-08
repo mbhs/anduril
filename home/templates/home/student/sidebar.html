@@ -1,7 +1,7 @@
-<a class="item">Dashboard</a>
-<a class="item">News</a>
-<a class="item">Courses</a>
-<a class="item">Friends</a>
+<a class="item disabled">Dashboard</a>
+<a class="item disabled">News</a>
+<a class="item disabled">Courses</a>
+<a class="item disabled">Friends</a>
 <a class="item" href="{% url "groups:index" %}">Groups</a>
 <div class="section">Groups</div>
 {% if user.groups.length > 0 %}
@@ -11,6 +11,6 @@
 {% endif %}
 <div class="section">Account</div>
 <a class="item" href="{% url "home:profile" %}">Profile</a>
-<a class="item" href="{% url "oauth2_provider:list" %}">Applications &#x2713;</a>
-<a class="item">Settings</a>
-<a class="item" href="{% url "home:logout" %}">Logout &#x2713;</a>
+<a class="item" href="{% url "oauth2_provider:list" %}">Applications</a>
+<a class="item disabled">Settings</a>
+<a class="item" href="{% url "home:logout" %}">Logout</a>

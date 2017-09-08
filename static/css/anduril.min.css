@@ -59,8 +59,10 @@ body {
     #sidebar .menu .item {
       cursor: pointer; }
     #sidebar .menu .item:hover {
-      color: inherit;
+      color: #ccc;
       background-color: #666; }
+    #sidebar .menu .item.disabled:hover {
+      background-color: inherit; }
 
 #main {
   padding: 0;
