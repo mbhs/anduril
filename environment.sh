@@ -1,1 +1,1 @@
-DJANGO_SETTINGS_MODULE="anduril.settings.production"
+DJANGO_SETTINGS_MODULE=anduril.settings.production

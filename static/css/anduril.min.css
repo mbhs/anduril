@@ -2,17 +2,21 @@
   color: #9f2727; }
 
 body {
-  height: 100vh;
+  max-height: 100vh;
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  margin: 0;
+  padding: 0; }
 
-.row.menubar {
+#menubar {
   display: block; }
 
-.row.main {
-  flex-grow: 1; }
+#main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row; }
 
-#sidebar, #main {
+#sidebar, #content {
   flex-grow: 1; }
 
 #menubar {
@@ -66,10 +70,7 @@ body {
 
 #main {
   padding: 0;
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column; }
+  width: 100%; }
   #main #content {
     flex-grow: 1;
     overflow-y: scroll;
@@ -81,8 +82,12 @@ body {
   margin: 2rem auto; }
 
 @media (max-width: 575px) {
+  #main {
+    display: block; }
+
   #main #sidebar {
-    height: auto; }
+    height: auto;
+    width: 100%; }
 
   #main #content {
     overflow-y: visible; } }

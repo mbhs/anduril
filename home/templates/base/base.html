@@ -8,22 +8,20 @@
         <link rel="stylesheet" type="text/css" href="/static/css/anduril.min.css">
         {% block head %}{% endblock %}
     </head>
-    <body class="container-fluid">
+    <body>
         {% block menubar %}
-        <div class="row menubar">
-            <div id="menubar">
-                <a class="item" href="{% url "home:index" %}">Home</a>
-                <a class="item right" href="{% url "home:logout" %}">
-                    {% if user.is_authenticated %} Logout {% else %} Login {% endif %}
-                </a>
-                {% if user.is_staff %}
-                <a class="item right" href="{% url "admin:index" %}">Admin</a>
-                {% endif %}
-                <a class="item right" href="{% url "home:account" %}">{{ user.get_full_name }}</a>
-            </div>
+        <div id="menubar">
+            <a class="item" href="{% url "home:index" %}">Home</a>
+            <a class="item right" href="{% url "home:logout" %}">
+                {% if user.is_authenticated %} Logout {% else %} Login {% endif %}
+            </a>
+            {% if user.is_staff %}
+            <a class="item right" href="{% url "admin:index" %}">Admin</a>
+            {% endif %}
+            <a class="item right" href="{% url "home:account" %}">{{ user.get_full_name }}</a>
         </div>
         {% endblock %}
-        <div class="row main">
+        <div id="main">
             <div id="sidebar" class="col-lg-2 col-md-4 col-sm-4 no-float">
                 <div class="menu">
                     {% block sidebar %}
@@ -33,10 +31,8 @@
                     {% endblock sidebar %}
                 </div>
             </div>
-            <div id="main" class="col-lg-10 col-md-8 col-sm-8 no-float">
-                <div id="content" class="{% block class %}{% endblock %}">
-                    {% block content %}{% endblock %}
-                </div>
+            <div id="content" class="col-lg-10 col-md-8 col-sm-8 no-float {% block class %}{% endblock %}">
+                {% block content %}{% endblock %}
             </div>
         </div>
     </body>

@@ -1,22 +1,17 @@
 @import "theme";
 
 body {
-  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
-.row.menubar {
-  display: block;
-}
+#menubar { display: block; }
+#main { flex-grow: 1; display: flex; flex-direction: row; }
 
-.row.main {
-  flex-grow: 1;
-}
-
-#sidebar, #main {
-  flex-grow: 1;
-}
+#sidebar, #content { flex-grow: 1; }
 
 #menubar {
 
@@ -101,15 +96,11 @@ body {
   padding: 0;
   width: 100%;
 
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-
   #content {
 
     flex-grow: 1;
 
-    overflow-y: scroll;  // Could be better
+    overflow-y: scroll;
     padding: 1.5em 2em;
 
     h1 { font-size: 48px; }
@@ -123,6 +114,7 @@ body {
 }
 
 @media (max-width: 575px) {
-  #main #sidebar { height: auto; }
+  #main { display: block; }
+  #main #sidebar { height: auto; width: 100%; }
   #main #content { overflow-y: visible; }
 }
