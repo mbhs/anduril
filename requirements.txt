@@ -7,3 +7,4 @@ djangorestframework
 pyyaml
 psycopg2
 gunicorn
+sh

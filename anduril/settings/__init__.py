@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+from . import secret
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,8 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b$(03!3otd#7c!2*gn2cvu#2_!)(i!xxw8-o0_u^4vlv^k#5)j'
+# Secret key moved to file
+SECRET_PATH = os.path.join(BASE_DIR, "anduril", "settings", "secret.txt")
+SECRET_KEY = secret.get(SECRET_PATH)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -10,4 +10,4 @@ migrations/
 venv/
 env/
 
-/anduril/settings/secret.py
+/anduril/settings/secret.txt
