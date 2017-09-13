@@ -11,3 +11,5 @@ venv/
 env/
 
 /anduril/settings/secret.txt
+
+dump.csv
