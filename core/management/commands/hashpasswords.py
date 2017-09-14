@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password
 
 import csv
 import os
+import string
 
 
 def generate_hashed_filename(path):
@@ -11,6 +12,13 @@ def generate_hashed_filename(path):
     head, tail = os.path.split(path)
     name, extension = os.path.splitext(tail)
     return os.path.join(head, ".".join((name, "hashed", extension.lstrip("."))))
+
+
+def printable(handle):
+    """Generator that filters non-printable characters while reading."""
+
+    for line in handle:
+        yield "".join(filter(lambda x: x in string.printable, line))
 
 
 class Command(BaseCommand):
@@ -43,7 +51,7 @@ class Command(BaseCommand):
         hashed = generate_hashed_filename(dump)
 
         with open(dump) as read, open(hashed, "w") as write:
-            reader = csv.reader(read)
+            reader = csv.reader(printable(read))
             writer = csv.writer(write)
 
             # Determine password column
