@@ -3,6 +3,7 @@ django-polymorphic
 django-oauth-toolkit
 django-cors-middleware
 django-crispy-forms
+django-oidc-provider
 djangorestframework
 pyyaml
 psycopg2
