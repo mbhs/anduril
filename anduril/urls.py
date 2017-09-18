@@ -24,7 +24,8 @@ import groups.site
 urlpatterns = [
     url(r"", include(home.site.urls, namespace="home")),
     url(r"^groups/", include(groups.site.urls, namespace="groups")),
-    url(r"^admin/", admin.site.urls),
-    url(r"^o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     url(r"^api/", include(api.site.urls, namespace="api")),
+    url(r"^admin/", admin.site.urls),
+    url(r"^oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+    url(r'^openid/', include('oidc_provider.urls', namespace='oidc_provider')),
 ]

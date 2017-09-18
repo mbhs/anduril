@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'corsheaders',
     'oauth2_provider',
+    'oidc_provider',
     'rest_framework',
     'crispy_forms',
 ]
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'oidc_provider.middleware.SessionManagementMiddleware',
 ]
 
 ROOT_URLCONF = 'anduril.urls'
@@ -167,3 +169,10 @@ REST_FRAMEWORK = {
 OAUTH2_PROVIDER = {
     "SCOPES": {"read": "Read scope", "write": "Write scope"}
 }
+
+
+# OIDC Provider
+# http://django-oidc-provider.readthedocs.io/en/v0.5.x/sections/scopesclaims.html
+
+OIDC_USERINFO = "anduril.settings.oidc"
+OIDC_EXTRA_SCOPE_CLAIMS = "anduril.settings.oidc.CustomScopeClaims"
