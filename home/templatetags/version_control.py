@@ -1,6 +1,6 @@
 from django import template
 
-import sh
+import subprocess
 import re
 
 
@@ -34,7 +34,8 @@ def cached(func):
 def commit_hash():
     """Get the most recent commit hash."""
 
-    return clean(sh.git("rev-parse", "HEAD"))
+    with subprocess.Popen(["git", "rev-parse", "HEAD"], stdout=subprocess.PIPE) as process:
+        return clean(process.stdout.read().decode())
 
 
 @register.simple_tag(name="commit_hash_short")
@@ -42,7 +43,8 @@ def commit_hash():
 def commit_hash_short():
     """Get the most recent commit hash."""
 
-    return clean(sh.git("rev-parse", "--short", "HEAD"))
+    with subprocess.Popen(["git", "rev-parse", "--short", "HEAD"], stdout=subprocess.PIPE) as process:
+        return clean(process.stdout.read().decode())
 
 
 @register.simple_tag(name="commit_date")
@@ -50,7 +52,8 @@ def commit_hash_short():
 def commit_date():
     """Get the most recent commit date."""
 
-    return clean(sh.git.log("--no-decorate", "-1", "--format=%cd"))
+    with subprocess.Popen(["git", "log", "--no-decorate", "-l", "--format=%cd"], stdout=subprocess.PIPE) as process:
+        return clean(process.stdout.read().decode())
 
 
 @register.simple_tag(name="commit_author")
@@ -58,4 +61,5 @@ def commit_date():
 def commit_author():
     """Get the most recent commit author."""
 
-    return clean(sh.git.log("--no-decorate", "-1", "--format=%cd"))
+    with subprocess.Popen(["git", "log", "--no-decorate", "-1", "--format=%an"], stdout=subprocess.PIPE) as process:
+        return clean(process.stdout.read().decode())
