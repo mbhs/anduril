@@ -24,3 +24,5 @@ DATABASES = {
         "PORT": "",
     }
 }
+
+SITE_URL = "https://home.mbhs.edu"

@@ -176,3 +176,5 @@ OAUTH2_PROVIDER = {
 
 OIDC_USERINFO = "anduril.settings.oidc"
 OIDC_EXTRA_SCOPE_CLAIMS = "anduril.settings.oidc.CustomScopeClaims"
+OIDC_SESSION_MANAGEMENT_ENABLE = True
+SITE_URL = "http://localhost:8000"
