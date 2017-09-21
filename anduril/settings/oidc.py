@@ -11,15 +11,20 @@ class CustomScopeClaims(ScopeClaims):
     def scope_profile(self):
         """Populate the scope claim dictionary."""
 
-        base = {
+        return {
             "id": self.user.id,
             "username": self.user.username,
             "first_name": self.user.first_name,
             "last_name": self.user.last_name,
             "type": self.user.profile.type}
+
+    info_id = ("Student ID", "Student ID number, if applicable.")
+
+    def scope_id(self):
+        """Get student ID."""
+
         if self.user.profile.type == UserProfile.STUDENT:
-            base["student_id"] = self.user.profile.student_id
-        return base
+            return {"student_id": self.user.profile.student_id}
 
     info_email = ("Email address", "Email address and verification.")
 
