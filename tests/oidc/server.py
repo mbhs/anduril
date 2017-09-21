@@ -8,12 +8,14 @@ app.config.update(OIDC_CLIENT_SECRETS="./secrets.json",
 
 oidc = OpenIDConnect(app)
 
+
 @app.route("/")
 def index():
     if not oidc.user_loggedin:
         return """<a href="/login">Log in</a>"""
     else:
         return f"""Hello, {oidc.user_getfield('username')}"""
+
 
 @app.route('/login')
 @oidc.require_login
