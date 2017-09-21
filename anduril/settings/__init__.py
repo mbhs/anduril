@@ -174,7 +174,10 @@ OAUTH2_PROVIDER = {
 # OIDC Provider
 # http://django-oidc-provider.readthedocs.io/en/v0.5.x/sections/scopesclaims.html
 
-OIDC_USERINFO = "anduril.settings.oidc"
+SITE_URL = "http://localhost:8000/"
+
+# OIDC_USERINFO = "anduril.settings.oidc.user_info"
+
 OIDC_EXTRA_SCOPE_CLAIMS = "anduril.settings.oidc.CustomScopeClaims"
 OIDC_SESSION_MANAGEMENT_ENABLE = True
-SITE_URL = "http://localhost:8000"
+

@@ -27,5 +27,5 @@ urlpatterns = [
     url(r"^api/", include(api.site.urls, namespace="api")),
     url(r"^admin/", admin.site.urls),
     url(r"^oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
-    url(r'^openid/', include('oidc_provider.urls', namespace='oidc_provider')),
+    url(r"^openid/", include("oidc_provider.urls", namespace="oidc_provider")),
 ]

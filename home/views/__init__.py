@@ -39,6 +39,7 @@ class LoginView(View):
             return response
 
         auth.login(request, user)
+
         return redirect("home:index")
 
 
