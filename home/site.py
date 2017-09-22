@@ -7,6 +7,7 @@ urls = [
     # Login
     url("^login/$", views.LoginView.as_view(), name="login"),
     url("^logout/$", views.logout, name="logout"),
+    # url("^email/$", views.EmailView.as_view(), name="email"),
 
     # Shared pages
     url("^$", views.IndexView.as_view(), name="index"),
