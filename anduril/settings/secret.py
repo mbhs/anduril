@@ -20,3 +20,4 @@ def get(path):
         secret = generate()
         with open(path, "w") as file:
             file.write(secret)
+        return secret
