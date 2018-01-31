@@ -11,12 +11,11 @@ class CustomScopeClaims(ScopeClaims):
     def scope_profile(self):
         """Populate the scope claim dictionary."""
 
-        return {
-            "id": self.user.id,
-            "username": self.user.username,
-            "first_name": self.user.first_name,
-            "last_name": self.user.last_name,
-            "type": self.user.profile.type}
+        return {"id": self.user.id,
+                "username": self.user.username,
+                "first_name": self.user.first_name,
+                "last_name": self.user.last_name,
+                "type": self.user.profile.type}
 
     info_id = ("Student ID", "Student ID number, if applicable.")
 
