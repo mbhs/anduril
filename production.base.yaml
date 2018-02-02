@@ -1,0 +1,24 @@
+# The empty production configuration file for the Anduril system. In
+# order to actually use it, create a copy of this file called
+# production.yaml and fill in the correct configuration.
+
+
+# Database configuration
+# This translates directly to the Django database configuration with
+# some convenience defaults for user, password, host, and port.
+database:
+
+  # The Django database engine to use. Could be the default Sqlite3
+  # or something like Postgres: django.db.backends.postgresql_psycopg2
+  engine:
+
+  # The name of the database for Django to use.
+  name:
+
+  # The username of the database user. If this line is not provided,
+  # or left empty, it will be the same as if there were no user.
+  user:
+
+  # The database user's password. This also defaults to an empty
+  # string if the line is not provided.
+  password:

@@ -9,7 +9,6 @@ from polymorphic.models import PolymorphicModel
 from django.contrib.auth import models as auth
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
-from django.db.models.fields import related_descriptors
 from django.dispatch import receiver
 from django.utils import timezone
 

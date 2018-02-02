@@ -1,16 +1,29 @@
+# Editors, MacOS crap
 .idea/
 .sass-cache/
 .DS_Store
 
+# Testing database
 *.sqlite3
 
+# Python cache files
 __pycache__/
+*.pyc
 
+# Migrations
 migrations/
+
+# Virtual environments
 venv/
 env/
+
+# Local pipfile
 Pipfile.lock
 
+# Secret file, data
 /anduril/settings/secret.txt
-
 testing/
+logs/
+
+# Configuration
+production.yaml
