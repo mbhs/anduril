@@ -24,6 +24,3 @@ Pipfile.lock
 /anduril/settings/secret.txt
 testing/
 logs/
-
-# Configuration
-production.yaml
