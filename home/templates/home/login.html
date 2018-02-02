@@ -1,9 +1,11 @@
 {% extends "base/empty.html" %}
 
+{% load static %}
+
 {% block title %}Login{% endblock %}
 
 {% block head %}
-<script type="text/javascript" src="/static/js/parameters.js"></script>
+<script type="text/javascript" src="{% static "js/parameters.js" %}"></script>
 {% endblock %}
 
 {% block sidebar %}{% endblock %}
@@ -12,7 +14,7 @@
 {% block content %}
 <div id="login" class="container-center">
     <div class="center">
-        <form id="login-form" action="/login/" method="post">
+        <form id="login-form" action="{% url "login" %}" method="post">
             {% csrf_token %}
 
             <span class="logo">MBHS<span class="primary">Home</span></span>

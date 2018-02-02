@@ -1,12 +1,13 @@
 {% load full_name %}
 {% load version_control %}
+{% load sass_tags %}
 
 <html lang="en-US">
     <head>
         <title>MBHS - {% block title %}{% endblock %}</title>
         <meta charset="utf-8">
         {% include "base/bootstrap.html" %}
-        <link rel="stylesheet" type="text/css" href="/static/css/anduril.min.css">
+        <link rel="stylesheet" type="text/css" href="{% sass_src "css/home.scss" %}">
         {% block head %}{% endblock %}
     </head>
     <body>
