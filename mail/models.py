@@ -13,19 +13,21 @@ class Domain(models.Model):
     """
 
     name = models.CharField(max_length=50)
-    default = models.BooleanField(default=False)
+    main = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """Save the domain and make sure there is only one default."""
 
-        if self.default:
-            for domain in Domain.objects.exclude(self).all():
-                domain.default = False
+        if self.main:
+            for domain in Domain.objects.exclude(id=self.id).all():
+                domain.main = False
         super().save(*args, **kwargs)
 
     @staticmethod
     def default():
         """Get default domain."""
+
+        return Domain.objects.filter(main=True).first()
 
 
 class Mailbox(models.Model):
