@@ -1,9 +1,5 @@
 from django.db import models
 
-from core.models import User
-
-import os
-
 
 class Domain(models.Model):
     """Domains forwarded to this server for mail.
@@ -30,50 +26,22 @@ class Domain(models.Model):
         return Domain.objects.filter(main=True).first()
 
 
-class Mailbox(models.Model):
-    """A locally hosted mailbox account.
+class Account(models.Model):
+    """A mail account either for local hosting or forwarding.
 
-    The mailbox is handled by postfix. Given a domain and account
-    name, this model stores where the mail directory should be
-    located on the server.
+    This is a generic mail account. It must have a unique email, and
+    notice that the email redundantly contains the domain name due to
+    Postfix limitations. This is checked in the save functionality.
+    If the forward address is set, this account will be used as an
+    alias. Otherwise, mail will be stored on the server.
     """
 
     domain = models.ForeignKey(Domain)
-    name = models.CharField(max_length=50)
-    directory = models.CharField(max_length=102)
-
-    def __init__(self, domain, name):
-        """Initialize a new mailbox with a default directory."""
-
-        super().__init__(domain=domain, name=name)
-        self.directory = os.path.join(domain.name, name)
-
-
-class Alias(models.Model):
-    """A mail alias that forwards to an external email."""
-
-    domain = models.ForeignKey(Domain)
-    name = models.CharField(max_length=100)
+    address = models.EmailField(unique=True)
     forward = models.EmailField()
 
-
-class Account(models.Model):
-    """Create a mail account linked to a user."""
-
-    user = models.ForeignKey(User)
-    mailbox = models.ForeignKey(Mailbox, null=True)
-    alias = models.ForeignKey(Alias, null=True)
-
     def save(self, *args, **kwargs):
-        """Save the user mail mapping."""
+        """Save the account and check domain."""
 
-        if self.mailbox is not None and self.alias is not None:
-            raise RuntimeError("Cannot have both a mailbox and alias.")
-
-    @staticmethod
-    def setup(user, domain=None):
-        """Create a new mail account for a user. Default to mailbox."""
-
-        self = Account()
-        self.user = user
-        self.mailbox = Mailbox(domain=domain or Domain.default(), name=user.username)
+        assert self.address.split("@")[1] == self.domain.name
+        super().save(*args, **kwargs)

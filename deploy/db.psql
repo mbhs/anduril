@@ -1,0 +1,6 @@
+CREATE DATABASE anduril;
+CREATE USER anduril WITH PASSWORD '{password}';
+ALTER ROLE anduril SET client_encoding TO 'utf8';
+ALTER ROLE anduril SET default_transaction_isolation TO 'read committed';
+ALTER ROLE anduril SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE anduril TO anduril;

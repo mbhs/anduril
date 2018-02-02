@@ -1,0 +1,6 @@
+CREATE USER mail WITH PASSWORD '{password}';
+
+\c anduril;
+GRANT SELECT ON mail_domain TO mail;
+GRANT SELECT ON mail_mailbox TO mail;
+GRANT SELECT ON mail_alias TO mail;
