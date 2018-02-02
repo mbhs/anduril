@@ -15,3 +15,10 @@ Anduril is a software suite for managing people, organizations, and technology i
 And, of course, a solid foundation for future development
 
 Feel free to reach out to us if you either have any questions or concerns or wish to contribute. This project is developed and maintained by the Blair Sysops.
+
+## Setup
+
+- Database configuration
+- Making migrations
+- OIDC RSA key generation
+- Mail configuration

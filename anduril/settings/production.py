@@ -5,19 +5,22 @@ import yaml
 from . import *
 
 
-# Grab details from the configuration file in the root directory
-try:
-    with open(os.path.join(BASE_DIR, "production.yaml")) as file:
-        config = yaml.load(file)
-except FileNotFoundError:
-    print("Could not find a production.yaml file in the root directory!")
-    import sys
-    sys.exit(1)
-
-
 # Set new URLs for the site
 ALLOWED_HOSTS = ["home.mbhs.edu", "localhost"]
 SITE_URL = "https://home.mbhs.edu"
+
+
+CONFIG_DIR = os.path.join(BASE_DIR, "config")
+DATABASE_CONFIG = os.path.join(CONFIG_DIR, "db.yml")
+
+# Grab details from the configuration file in the root directory
+try:
+    with open(DATABASE_CONFIG) as file:
+        config = yaml.load(file)
+except FileNotFoundError:
+    print("Could not find the db.yml file in the config directory!")
+    import sys
+    sys.exit(1)
 
 
 # Use the production database
