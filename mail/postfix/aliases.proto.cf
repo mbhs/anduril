@@ -2,4 +2,4 @@ user = {user}
 password = {password}
 hosts = localhost
 dbname = anduril
-query = SELECT 1 FROM mail_account WHERE (mail_account.address = '%s' AND mail_account.forward <> '')
+query = SELECT 1 FROM mail_account WHERE mail_account.address = '%s' AND mail_account.forward <> ''
