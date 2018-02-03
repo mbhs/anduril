@@ -11,6 +11,11 @@ class Domain(models.Model):
     name = models.CharField(max_length=50)
     main = models.BooleanField(default=False)
 
+    def __str__(self):
+        """Represent the domain as a string."""
+
+        return self.name
+
     def save(self, *args, **kwargs):
         """Save the domain and make sure there is only one default."""
 
@@ -39,6 +44,11 @@ class Account(models.Model):
     domain = models.ForeignKey(Domain)
     address = models.EmailField(unique=True)
     forward = models.EmailField()
+
+    def __str__(self):
+        """Represent the account as a string."""
+
+        return self.address
 
     def save(self, *args, **kwargs):
         """Save the account and check domain."""
