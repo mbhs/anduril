@@ -2,4 +2,4 @@ user = {user}
 password = {password}
 hosts = localhost
 dbname = anduril
-query = SELECT 1 FROM mail_domain WHERE mail_domain.name = '%s'
+query = SELECT name FROM mail_domain WHERE mail_domain.name = '%s'
