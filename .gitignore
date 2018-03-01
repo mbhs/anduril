@@ -22,5 +22,6 @@ Pipfile.lock
 
 # Secret file, data
 /anduril/settings/secret.txt
+static/
 testing/
 logs/

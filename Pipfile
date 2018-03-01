@@ -7,17 +7,19 @@ name = "pypi"
 
 [packages]
 
-django_polymorphic = "*"
+django-polymorphic = "*"
 django-oauth-toolkit = "*"
 django-cors-middleware = "*"
 django-crispy-forms = "*"
 django-oidc-provider = "*"
 djangorestframework = "*"
-PyYAML = "*"
+pyyaml = "*"
 "psycopg2" = "*"
 gunicorn = "*"
-Django = "==1.11"
+django = "==1.11"
+django-sass-processor = "*"
 
 
 [dev-packages]
 
+django-compressor = "*"
