@@ -18,6 +18,7 @@ pyyaml = "*"
 gunicorn = "*"
 django = "==1.11"
 django-sass-processor = "*"
+libsass = "*"
 
 
 [dev-packages]
