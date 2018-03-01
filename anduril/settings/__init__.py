@@ -147,7 +147,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Login URL
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOGIN_URL
 
-LOGIN_URL = "/login/"
+LOGIN_URL = "home:login"
 
 
 # CORS setup
